@@ -1,0 +1,5 @@
+# Игнорировать файлы шейдеров в статистике языков GitHub
+*.shader linguist-detectable=false
+
+# Игнорировать файлы TextMesh Pro в статистике языков GitHub
+Assets/TextMeshPro/** linguist-generated

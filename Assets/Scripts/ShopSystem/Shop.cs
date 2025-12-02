@@ -24,7 +24,6 @@ public class Shop : MonoBehaviour
         _mainMenu = transform.GetChild(1).gameObject;
         _statsManager = GameObject.FindGameObjectWithTag("GameController").GetComponent<StatsManager>();
         _notifyer = GameObject.FindGameObjectWithTag("Notifyer").GetComponent<OnScreenNotify>();
-        Type type = typeof(ShopItem);
 
 
         Type ourtype = typeof(ShopItem); // Базовый тип
@@ -45,21 +44,19 @@ public class Shop : MonoBehaviour
         
         //Заполение карточек товарами
         _mainMenu.SetActive(true);
-        ShuffleAndShowItems();
         ItemButtons = GameObject.FindGameObjectsWithTag("ItemCard").ToList();
-        Debug.Log("Shop initialized with " + Objects.Count() + " items and " + ItemButtons.Count() + " item cards.");
+        ShuffleAndShowItems();
+        Debug.Log("Shop initialized with " + Objects.Count + " items and " + ItemButtons.Count + " item cards.");
         _mainMenu.SetActive(false);
     }
 
     #region ShopMethods
     public void ShuffleAndShowItems()
     {
-        Debug.Log("A");
         // Перемешивание предметов
-        for(int i = 0; i < Objects.Count(); i++ )
+        for(int i = Objects.Count - 1; i > 0; i--)
         {
-            Debug.Log("B");
-            int rnd = UnityEngine.Random.Range(0, Objects.Count());
+            int rnd = UnityEngine.Random.Range(0, i + 1);
             var temp = Objects[i];
             Objects[i] = Objects[rnd];
             Objects[rnd] = temp;
@@ -67,16 +64,13 @@ public class Shop : MonoBehaviour
 
         for(int i = 0; i < ItemButtons.Count(); i++ )
         {
-            Debug.Log("C");
-            GameObject go = ItemButtons[i];
+            GameObject card = ItemButtons[i];
             
             var item = Objects[i];
             if (item.purchased)
             {
-                Debug.Log("D");
                 foreach(var obj in Objects)
                 {
-                    Debug.Log("E");
                     if(!obj.purchased)
                     {
                         item = obj;
@@ -84,18 +78,13 @@ public class Shop : MonoBehaviour
                     }
                 }
             }
-            else
-            {
-                Debug.Log("F");
-               FillButton(go, item, i); 
-            }
+            FillButton(card, item, i);
             Debug.Log("Item card " + i + " filled.");
         }
     }   
 
     private void FillButton(GameObject Button, ShopItem item, int i)
     {
-            Debug.Log("G");
             Button.transform.GetChild(0).GetComponent<IdHolder>().ItemId = item.ItemId;
             Button.transform.GetChild(0).GetChild(0).GetComponent<Image>().sprite = Resources.Load<Sprite>("Shop/" + item.PathToImage);
 
@@ -108,18 +97,20 @@ public class Shop : MonoBehaviour
 
     private void ActivateItem(int id)
     {
-        Debug.Log("Activating item with ID: " + id);
-        foreach (var obj in Objects)
+        ShopItem item = Objects.FirstOrDefault(obj => obj.ItemId == id);
+        
+        if (item == null)
         {
-           if(obj.ItemId == id)
-           {
-                _statsManager.UpdgradeDamage(obj.buffDamage - obj.debuffDamage);
-                _statsManager.UpdgradeHealth(obj.buffHealth - obj.debuffHealth);
-                _statsManager.UpdgradeSpeed(obj.buffSpeed - obj.debuffSpeed);
-                _statsManager.AddXpMultiplier(obj.buffXpMultiplier - obj.debuffXpMultiplier);
-           }
+            Debug.LogWarning($"Item with ID {id} not found!");
+            return;
         }
-        Debug.Log("Item " + id + "(ID) activation complete.");
+        
+        _statsManager.AddStatBonus(0, item.buffHealth - item.debuffHealth);
+        _statsManager.AddStatBonus(1, item.buffSpeed - item.debuffSpeed);
+        _statsManager.AddStatBonus(2, item.buffDamage - item.debuffDamage);
+        _statsManager.AddXpMultiplier(item.buffXpMultiplier - item.debuffXpMultiplier);
+        
+        Debug.Log($"Item {id} ({item.ItemDescription}) activated!");
     }
     #endregion
 
@@ -154,11 +145,13 @@ public class Shop : MonoBehaviour
                     ActivateItem(id);
                     obj.purchased = true;
                     Debug.Log("Item " + id + "(ID) purchased successfully.");
+                    break;
                 }
                 else
                 {
                     Debug.Log("Not enough gold to purchase item " + id + "(ID).");
                     _notifyer.Notify("Not enough gold to buy this item!", 4);
+                    break;
                 }
            }
         }

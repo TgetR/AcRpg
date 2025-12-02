@@ -55,7 +55,7 @@ public class StatsManagerMenu : MonoBehaviour
 
         else if (_statsManager.GetUpgradePoints() > 0)
         {
-            _statsManager.UpdgradeSpeed(1);
+            _statsManager.UpgradeStat(1);
             StartCoroutine(SucessfulUpgrade(speedUpgradeText));
             speedCountText.text = "Speed - " + _statsManager.Speed;
         }
@@ -72,7 +72,7 @@ public class StatsManagerMenu : MonoBehaviour
 
         else if (_statsManager.GetUpgradePoints() > 0)
         {
-            _statsManager.UpdgradeHealth(1);
+            _statsManager.UpgradeStat(0);
             StartCoroutine(SucessfulUpgrade(healthUpgradeText));
             healthCountText.text = "Maximum health - " + _statsManager.MaxHealth;
         }
@@ -90,7 +90,7 @@ public class StatsManagerMenu : MonoBehaviour
 
         else if (_statsManager.GetUpgradePoints() > 0)
         {
-            _statsManager.UpdgradeDamage(1);
+            _statsManager.UpgradeStat(2);
             StartCoroutine(SucessfulUpgrade(damageUpgradeText));
             damageCountText.text = "Damage - " + _statsManager.Damage;
         }

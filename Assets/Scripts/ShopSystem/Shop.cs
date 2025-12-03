@@ -1,7 +1,5 @@
-using System;
 using System.Collections.Generic;
 using System.Linq;
-using System.Reflection;
 using TMPro;
 using UnityEngine;
 using UnityEngine.UI;
@@ -44,7 +42,7 @@ public class Shop : MonoBehaviour
         // Перемешивание предметов
         for(int i = availableItems.Count - 1; i > 0; i--)
         {
-            int rnd = UnityEngine.Random.Range(0, i + 1);
+            int rnd = Random.Range(0, i + 1);
             var temp = availableItems[i];
             availableItems[i] = availableItems[rnd];
             availableItems[rnd] = temp;

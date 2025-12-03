@@ -193,11 +193,11 @@ public class PlayerController : MonoBehaviour
 
         if (_AttackAllow && target != null)
         {
+            if(target != null) target.ChangeHealth(-_damage);
             _AttackAllow = false;
             target.transform.localScale = new Vector3(-FacingDirection, transform.localScale.y);
 
             yield return new WaitForSeconds(0.6f);
-            if(target != null) target.ChangeHealth(-_damage);
         }
        yield return new WaitForSeconds(1);
         _isInAttack = false;

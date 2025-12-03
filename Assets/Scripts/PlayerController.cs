@@ -7,6 +7,7 @@ using UnityEngine.SceneManagement;
 
 public class PlayerController : MonoBehaviour
 {
+    #region Setup
     public int FacingDirection = 1; // 1 or -1  1-Right  -1-Left
 
     [SerializeField] TMP_Text HpText;
@@ -50,30 +51,9 @@ public class PlayerController : MonoBehaviour
         _attackRangeCollider.isTrigger = true;
         _attackRangeCollider.radius = attackRadius;
     }
+    #endregion
 
-    private void OnTriggerEnter2D(Collider2D collision)
-    {
-        if (collision.gameObject.CompareTag("Enemy") || collision.gameObject.CompareTag("Archer"))
-        {
-            EnemyHealthSystem enemy = collision.GetComponent<EnemyHealthSystem>();
-            _enemiesInRange.Add(enemy);
-            Debug.Log($"Enemy enter to radius. Total enemies in radius: {_enemiesInRange.Count}");
-        }
-    }
-
-    private void OnTriggerExit2D(Collider2D collision)
-    {
-        if (collision.gameObject.CompareTag("Enemy") || collision.gameObject.CompareTag("Archer"))
-        {
-            EnemyHealthSystem enemy = collision.GetComponent<EnemyHealthSystem>();
-            if (enemy != null)
-            {
-                _enemiesInRange.Remove(enemy);
-                Debug.Log($"Enemy exit from radius. Total enemies: {_enemiesInRange.Count}");
-            }
-        }
-    }
-
+    #region UpdateMethods
     private void Update()
     {
         //Stats Update
@@ -84,67 +64,6 @@ public class PlayerController : MonoBehaviour
 
         UpdateAndCheckStats();
         AttackCheck();
-    }
-    void UpdateAndCheckStats()
-    {
-        HpText.text = "HP: " + _HP + "/" + _maxHP;
-        GoldText.text = "Gold: " + _Gold;
-        if (_HP <= 0)
-        {
-            SceneManager.LoadScene("GameOver");
-        }
-    }
-    void AttackCheck()
-    {
-        if (Input.GetKeyDown(KeyCode.Mouse0))
-        {
-            _isInAttack = true;
-            //Select attack version
-            byte AttackVersion = (byte)Random.Range(0, 2); //0 - first version;  1- second version
-            _animator.SetInteger("AttackV", AttackVersion);
-            if (_enemiesInRange.Count > 0)
-            {
-                EnemyHealthSystem closestEnemy = GetClosestEnemy();
-                if (closestEnemy != null)
-                {
-                _animator.SetTrigger("Attack");
-                StartCoroutine(Attack(closestEnemy));
-                }
-            }
-            else
-            {
-                _animator.SetTrigger("Attack");
-                StartCoroutine(ResetAttackCooldown());
-            } 
-            
-            _enemiesInRange.RemoveWhere(enemy => enemy == null); //Clean up null references
-        }
-    }
-
-    private IEnumerator ResetAttackCooldown()
-    {
-        yield return new WaitForSeconds(0.6f);
-        _isInAttack = false;
-    }
-
-    private EnemyHealthSystem GetClosestEnemy()
-    {
-        EnemyHealthSystem closest = null;
-        float minDistance = float.MaxValue;
-
-        foreach (var enemy in _enemiesInRange)
-        {
-            if (enemy == null) continue;
-
-            float distance = Vector2.Distance(transform.position, enemy.transform.position);
-            if (distance < minDistance)
-            {
-                minDistance = distance;
-                closest = enemy;
-            }
-        }
-
-        return closest;
     }
 
     void FixedUpdate()
@@ -171,14 +90,121 @@ public class PlayerController : MonoBehaviour
             }
         }
     }
+    #endregion
+    #region CheckMethods
+    void UpdateAndCheckStats()
+    {
+        HpText.text = "HP: " + _HP + "/" + _maxHP;
+        GoldText.text = "Gold: " + _Gold;
+        if (_HP <= 0)
+        {
+            SceneManager.LoadScene("GameOver");
+        }
+    }
 
+    void AttackCheck()
+    {
+        if (Input.GetKeyDown(KeyCode.Mouse0))
+        {
+            _isInAttack = true;
+            //Select attack version
+            byte AttackVersion = (byte)Random.Range(0, 2); //0 - first version;  1- second version
+            _animator.SetInteger("AttackV", AttackVersion);
+            if (_enemiesInRange.Count > 0)
+            {
+                EnemyHealthSystem closestEnemy = GetClosestEnemy();
+                if (closestEnemy != null)
+                {
+                Attack(closestEnemy);
+                }
+            }
+            else
+            {
+                StartCoroutine(ResetAttackCooldown());
+            } 
+            
+            _enemiesInRange.RemoveWhere(enemy => enemy == null); //Clean up null references
+        }
+    }
+    #endregion
+
+    #region TriggerMethods
+    private void OnTriggerEnter2D(Collider2D collision)
+    {
+        if (collision.gameObject.CompareTag("Enemy") || collision.gameObject.CompareTag("Archer"))
+        {
+            EnemyHealthSystem enemy = collision.GetComponent<EnemyHealthSystem>();
+            _enemiesInRange.Add(enemy);
+            Debug.Log($"Enemy enter to radius. Total enemies in radius: {_enemiesInRange.Count}");
+        }
+    }
+
+    private void OnTriggerExit2D(Collider2D collision)
+    {
+        if (collision.gameObject.CompareTag("Enemy") || collision.gameObject.CompareTag("Archer"))
+        {
+            EnemyHealthSystem enemy = collision.GetComponent<EnemyHealthSystem>();
+            if (enemy != null)
+            {
+                _enemiesInRange.Remove(enemy);
+                Debug.Log($"Enemy exit from radius. Total enemies: {_enemiesInRange.Count}");
+            }
+        }
+    }
+
+    private EnemyHealthSystem GetClosestEnemy()
+    {
+        EnemyHealthSystem closest = null;
+        float minDistance = float.MaxValue;
+
+        foreach (var enemy in _enemiesInRange)
+        {
+            if (enemy == null) continue;
+
+            float distance = Vector2.Distance(transform.position, enemy.transform.position);
+            if (distance < minDistance)
+            {
+                minDistance = distance;
+                closest = enemy;
+            }
+        }
+
+        return closest;
+    }
+    #endregion
+
+    
+    #region EssentialMethods
     void Flip()
     {
         FacingDirection *= -1;
         transform.localScale = new Vector3(transform.localScale.x * -1, transform.localScale.y, transform.localScale.z);
     }
 
-    //KnockBack for player when it have damage...
+    public void ChangeHealth(int heatlh)
+    {
+        _HP += heatlh;
+    }
+    #endregion
+
+    #region CombatMethods
+    void Attack(EnemyHealthSystem target)
+    {
+
+        if (_AttackAllow && target != null)
+        {
+            _AttackAllow = false;
+            target.transform.localScale = new Vector3(-FacingDirection, transform.localScale.y);
+            _animator.SetTrigger("Attack");
+
+            Wait(0.6f);
+            target.ChangeHealth(-_damage);
+        }
+        Wait(1);
+        _isInAttack = false;
+        _AttackAllow = true;
+    }
+
     public void KnockBack(Transform enemy, float force, float stunTime)
     {   
         if(!_isKnockedBack && _isKnockBackCooldownEnd)
@@ -189,6 +215,13 @@ public class PlayerController : MonoBehaviour
             StartCoroutine(KnockBackCounter(stunTime));
             StartCoroutine(KnockBackCooldown(5f));
         }
+    }
+    #endregion
+
+    #region Coroutines
+    IEnumerator Wait(float time)
+    {
+        yield return new WaitForSeconds(time);
     }
     IEnumerator KnockBackCounter(float time)
     {
@@ -204,27 +237,15 @@ public class PlayerController : MonoBehaviour
         _isKnockBackCooldownEnd = true;
     }
 
-    public void ChangeHealth(int heatlh)
+        private IEnumerator ResetAttackCooldown()
     {
-        _HP += heatlh;
-    }
-
-    IEnumerator Attack(EnemyHealthSystem target)
-    {
-
-        if (_AttackAllow && target != null)
-        {
-            _AttackAllow = false;
-            target.transform.localScale = new Vector3(-FacingDirection, transform.localScale.y);
-            _animator.SetTrigger("Attack");
-
-            yield return new WaitForSeconds(0.6f);
-            target.ChangeHealth(-_damage);
-        }
-        yield return new WaitForSeconds(1);
+        _animator.SetTrigger("Attack");
+        yield return new WaitForSeconds(0.6f);
         _isInAttack = false;
-        _AttackAllow = true;
     }
+    #endregion
+
+    #region Gizmos
     private void OnDrawGizmosSelected()
     {
         Gizmos.color = Color.red;
@@ -242,4 +263,5 @@ public class PlayerController : MonoBehaviour
             }
         }
     }
+    #endregion
 }

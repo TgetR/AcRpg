@@ -103,8 +103,9 @@ public class PlayerController : MonoBehaviour
 
     void AttackCheck()
     {
-        if (Input.GetKeyDown(KeyCode.Mouse0))
+        if (Input.GetKeyDown(KeyCode.Mouse0) && !_isInAttack && _AttackAllow)
         {
+            _animator.SetTrigger("Attack");
             _isInAttack = true;
             //Select attack version
             byte AttackVersion = (byte)Random.Range(0, 2); //0 - first version;  1- second version
@@ -194,10 +195,9 @@ public class PlayerController : MonoBehaviour
         {
             _AttackAllow = false;
             target.transform.localScale = new Vector3(-FacingDirection, transform.localScale.y);
-            _animator.SetTrigger("Attack");
 
             yield return new WaitForSeconds(0.6f);
-            target.ChangeHealth(-_damage);
+            if(target != null) target.ChangeHealth(-_damage);
         }
        yield return new WaitForSeconds(1);
         _isInAttack = false;
@@ -234,7 +234,6 @@ public class PlayerController : MonoBehaviour
 
         private IEnumerator ResetAttackCooldown()
     {
-        _animator.SetTrigger("Attack");
         yield return new WaitForSeconds(0.6f);
         _isInAttack = false;
     }

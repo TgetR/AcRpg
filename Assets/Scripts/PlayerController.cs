@@ -114,7 +114,7 @@ public class PlayerController : MonoBehaviour
                 EnemyHealthSystem closestEnemy = GetClosestEnemy();
                 if (closestEnemy != null)
                 {
-                Attack(closestEnemy);
+                StartCoroutine(Attack(closestEnemy));
                 }
             }
             else
@@ -187,7 +187,7 @@ public class PlayerController : MonoBehaviour
     #endregion
 
     #region CombatMethods
-    void Attack(EnemyHealthSystem target)
+    IEnumerator Attack(EnemyHealthSystem target)
     {
 
         if (_AttackAllow && target != null)
@@ -196,10 +196,10 @@ public class PlayerController : MonoBehaviour
             target.transform.localScale = new Vector3(-FacingDirection, transform.localScale.y);
             _animator.SetTrigger("Attack");
 
-            StartCoroutine(Wait(0.6f));
+            yield return new WaitForSeconds(0.6f);
             target.ChangeHealth(-_damage);
         }
-       StartCoroutine(Wait(1));
+       yield return new WaitForSeconds(1);
         _isInAttack = false;
         _AttackAllow = true;
     }
@@ -218,10 +218,6 @@ public class PlayerController : MonoBehaviour
     #endregion
 
     #region Coroutines
-    IEnumerator Wait(float time)
-    {
-        yield return new WaitForSeconds(time);
-    }
     IEnumerator KnockBackCounter(float time)
     {
         yield return new WaitForSeconds(time);

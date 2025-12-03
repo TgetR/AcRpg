@@ -1,6 +1,5 @@
 using System.Collections;
 using System.Collections.Generic;
-using System.Linq;
 using TMPro;
 using UnityEngine;
 using UnityEngine.SceneManagement;
@@ -197,10 +196,10 @@ public class PlayerController : MonoBehaviour
             target.transform.localScale = new Vector3(-FacingDirection, transform.localScale.y);
             _animator.SetTrigger("Attack");
 
-            Wait(0.6f);
+            StartCoroutine(Wait(0.6f));
             target.ChangeHealth(-_damage);
         }
-        Wait(1);
+       StartCoroutine(Wait(1));
         _isInAttack = false;
         _AttackAllow = true;
     }

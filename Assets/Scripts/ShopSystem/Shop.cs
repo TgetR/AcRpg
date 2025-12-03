@@ -74,7 +74,7 @@ public class Shop : MonoBehaviour
     private void FillButton(GameObject Button, ShopItemData item, int i)
     {
             Button.transform.GetChild(0).GetComponent<IdHolder>().ItemId = item.itemId;
-            Button.transform.GetChild(0).GetChild(0).GetComponent<Image>().sprite = Resources.Load<Sprite>("Shop/" + item.icon);
+            Button.transform.GetChild(0).GetChild(0).GetComponent<Image>().sprite = item.icon;
 
             Button.transform.GetChild(1).GetComponent<TMP_Text>().text = item.itemDescription;
             Button.transform.GetChild(2).GetComponent<TMP_Text>().text = item.effectDescription;
@@ -127,6 +127,7 @@ public class Shop : MonoBehaviour
         {
            if(item.itemId == id)
            {
+                Debug.Log("Cost: " + item.cost + ", Gold: " + _statsManager.Gold);
                 if(_statsManager.Gold >= item.cost)
                 {
                     _statsManager.Gold -= item.cost;
@@ -139,7 +140,7 @@ public class Shop : MonoBehaviour
                 {
                     Debug.Log("Not enough gold to purchase item " + id + "(ID).");
                     _notifyer.Notify("Not enough gold to buy this item!", 4);
-                    break;
+                    return;
                 }
            }
         }

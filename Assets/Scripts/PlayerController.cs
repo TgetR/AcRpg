@@ -61,6 +61,19 @@ public class PlayerController : MonoBehaviour
         }
     }
 
+    private void OnTriggerExit2D(Collider2D collision)
+    {
+        if (collision.gameObject.CompareTag("Enemy") || collision.gameObject.CompareTag("Archer"))
+        {
+            EnemyHealthSystem enemy = collision.GetComponent<EnemyHealthSystem>();
+            if (enemy != null)
+            {
+                _enemiesInRange.Remove(enemy);
+                Debug.Log($"Enemy exit from radius. Total enemies: {_enemiesInRange.Count}");
+            }
+        }
+    }
+
     private void Update()
     {
         //Stats Update

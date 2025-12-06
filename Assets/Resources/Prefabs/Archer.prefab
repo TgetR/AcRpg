@@ -15,6 +15,7 @@ GameObject:
   - component: {fileID: 8525950610430734169}
   - component: {fileID: 8083386786974745074}
   - component: {fileID: 7464178096150489250}
+  - component: {fileID: 7394711480709192112}
   m_Layer: 0
   m_Name: Archer
   m_TagString: Archer
@@ -156,7 +157,6 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: a5379071bd4b97e47a4101ddb5116c21, type: 3}
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::ArcherController
-  HP: 10
   KnockBackForce: 0.2
   player: {fileID: 0}
   FacingDirection: 1
@@ -209,4 +209,41 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: be671f1df506c204486170ce4bd9d055, type: 3}
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::EnemyHealthSystem
+  LocationNumber: 0
   HP: 10
+--- !u!58 &7394711480709192112
+CircleCollider2D:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 4302991555821437911}
+  m_Enabled: 1
+  serializedVersion: 3
+  m_Density: 1
+  m_Material: {fileID: 0}
+  m_IncludeLayers:
+    serializedVersion: 2
+    m_Bits: 0
+  m_ExcludeLayers:
+    serializedVersion: 2
+    m_Bits: 0
+  m_LayerOverridePriority: 0
+  m_ForceSendLayers:
+    serializedVersion: 2
+    m_Bits: 4294967295
+  m_ForceReceiveLayers:
+    serializedVersion: 2
+    m_Bits: 4294967295
+  m_ContactCaptureLayers:
+    serializedVersion: 2
+    m_Bits: 4294967295
+  m_CallbackLayers:
+    serializedVersion: 2
+    m_Bits: 4294967295
+  m_IsTrigger: 1
+  m_UsedByEffector: 0
+  m_CompositeOperation: 0
+  m_CompositeOrder: 0
+  m_Offset: {x: 0, y: 0}
+  m_Radius: 5

@@ -11,6 +11,7 @@ public class PlayerController : MonoBehaviour
 
     [SerializeField] TMP_Text HpText;
     [SerializeField] TMP_Text GoldText;
+    [SerializeField] TMP_Text XpText;
     private Rigidbody2D _rb;
     private HashSet<EnemyHealthSystem> _enemiesInRange;
     private Animator _animator;
@@ -28,6 +29,7 @@ public class PlayerController : MonoBehaviour
     private int _HP = 100;
     private int _maxHP = 100;
     private int _Gold = 100;
+    private float _Xp = 100;
     private float _speed = 5;
     private int _damage = 5;
 
@@ -60,6 +62,7 @@ public class PlayerController : MonoBehaviour
         _speed = _manager.Speed;
         _damage = _manager.Damage;
         _Gold = _manager.Gold;
+        _Xp = _manager.xpCount;
 
         UpdateAndCheckStats();
         AttackCheck();
@@ -95,6 +98,7 @@ public class PlayerController : MonoBehaviour
     {
         HpText.text = "HP: " + _HP + "/" + _maxHP;
         GoldText.text = "Gold: " + _Gold;
+        XpText.text = "XP: " + (int)_Xp;
         if (_HP <= 0)
         {
             SceneManager.LoadScene("GameOver");

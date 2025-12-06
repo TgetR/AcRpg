@@ -157,7 +157,8 @@ public class Shop : MonoBehaviour
     public void ExitShop()
     {
         Debug.Log("Exiting shop.");
-        gameObject.SetActive(false);
+        transform.GetChild(0).gameObject.SetActive(false);
+        transform.GetChild(1).gameObject.SetActive(false);
         Time.timeScale = 1;
     }
 

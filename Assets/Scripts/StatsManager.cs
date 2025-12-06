@@ -10,6 +10,7 @@ public class StatsManager : MonoBehaviour
     public int Damage = 100;
     public int Gold = 100;
     public float xpCount = 0;
+    public int HealTickets = 2;
 
     //XP
     private int _xpLvlDefault = 100; //How many xp do you need to fist lvl up;
@@ -47,6 +48,7 @@ public class StatsManager : MonoBehaviour
         _notify.Notify("Reached level up!", 1);
         _UpgradePointsAvailable++;
         _LvlUpXpNeed = (int)(_xpLvlDefault * _xpLvlMultiplier * _Level);
+        HealTickets++; //give 1 Heal Ticket
     }
 
     public int GetUpgradePoints()

@@ -3,7 +3,6 @@ using UnityEngine;
 
 public class ArcherController : MonoBehaviour 
 {
-    public int HP = 10;
     public float KnockBackForce = 0.2f;
     public Transform player;
     public int FacingDirection = 1; // 1 or -1  1-Right  -1-Left
@@ -11,41 +10,34 @@ public class ArcherController : MonoBehaviour
     private Animator _animator;
     private bool _isKnockedBack;
     private bool _ShootAllow = true;
-    private StatsManager _Smanager;
-    private Rigidbody2D _rb;
 
     private void Start()
     {
-        _Smanager = GameObject.FindGameObjectWithTag("GameController").GetComponent<StatsManager>();
-        _rb = GetComponent<Rigidbody2D>();
         _animator = GetComponent<Animator>();
         player = GameObject.FindGameObjectWithTag("Player").GetComponent<Transform>();
     }
 
     private void Update()
     {
-        if (HP <= 0)
-        {
-            Destroy(this.gameObject);
-            _Smanager.xpCount += 50;
-        }
-
         if (player.position.x > transform.position.x && FacingDirection == 1 || player.position.x < transform.position.x && FacingDirection == -1)
         {
             Flip();
         }
+    }
 
-        //Shoot all players (?) in circle radius
-        Collider2D[] rawResults;
-        rawResults = Physics2D.OverlapCircleAll(transform.position, 5f);
-        foreach (Collider2D collider in rawResults)
+    void OnTriggerEnter2D(Collider2D collision)
+    {
+        if (collision.gameObject == player && _ShootAllow)
         {
-            if (collider.gameObject.CompareTag("Player") && _ShootAllow)
-            {
-                PlayerController player = collider.GetComponent<PlayerController>();
-                StartCoroutine(Shoot());
-            }
-        }
+            StartCoroutine(Shoot());
+        } 
+    }
+    void OnTriggerStay2D(Collider2D collision)
+    {
+        if (collision.gameObject == player && _ShootAllow)
+        {
+            StartCoroutine(Shoot());
+        } 
     }
 
     IEnumerator Shoot()

@@ -23,14 +23,7 @@ public class PlayerController : MonoBehaviour
     [SerializeField] private float attackRadius = 1.2f;
     private CircleCollider2D _attackRangeCollider;
     
-
-    //Controlled by StatsManager
     private StatsManager _manager;
-    private int _maxHP = 100;
-    private int _Gold = 100;
-    private float _Xp = 100;
-    private float _speed = 5;
-    private int _damage = 5;
 
     void Start()
     {
@@ -55,13 +48,6 @@ public class PlayerController : MonoBehaviour
     #region UpdateMethods
     private void Update()
     {
-        //Stats Update
-        _maxHP = _manager.MaxHealth;
-        _speed = _manager.Speed;
-        _damage = _manager.Damage;
-        _Gold = _manager.Gold;
-        _Xp = _manager.xpCount;
-
         UpdateAndCheckStats();
         AttackCheck();
     }
@@ -81,7 +67,7 @@ public class PlayerController : MonoBehaviour
             _animator.SetFloat("Horizontal", Mathf.Abs(horizontal));
             _animator.SetFloat("Vertical", Mathf.Abs(vertical));
 
-            _rb.linearVelocity = new Vector2(horizontal * _speed, vertical * _speed);
+            _rb.linearVelocity = new Vector2(horizontal * _manager.Speed, vertical * _manager.Speed);
 
             //Give xp when walk
             if (horizontal != 0 || vertical != 0)
@@ -94,9 +80,9 @@ public class PlayerController : MonoBehaviour
     #region CheckMethods
     void UpdateAndCheckStats()
     {
-        HpText.text = "HP: " + _manager.Health + "/" + _maxHP;
-        GoldText.text = "Gold: " + _Gold;
-        XpText.text = "XP: " + (int)_Xp;
+        HpText.text = "HP: " + _manager.Health + "/" + _manager.MaxHealth;
+        GoldText.text = "Gold: " + _manager.Gold;
+        XpText.text = "XP: " + (int)_manager.xpCount;
         if (_manager.Health <= 0)
         {
             SceneManager.LoadScene("GameOver");
@@ -198,7 +184,7 @@ public class PlayerController : MonoBehaviour
             target.transform.localScale = new Vector3(-FacingDirection, transform.localScale.y);
 
             yield return new WaitForSeconds(0.6f);
-            if(target != null) target.ChangeHealth(-_damage);
+            if(target != null) target.ChangeHealth(-_manager.Damage);
         }
        yield return new WaitForSeconds(1);
         _isInAttack = false;

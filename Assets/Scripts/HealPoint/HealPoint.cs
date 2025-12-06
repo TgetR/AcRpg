@@ -16,7 +16,7 @@ public class HealPoint : MonoBehaviour
     }
     public void HealByGold(int cost)
     {
-        if(statsManager.Gold > cost)
+        if(statsManager.Gold >= cost)
         {
             statsManager.Gold -= cost;
             statsManager.Health = statsManager.MaxHealth;
@@ -32,7 +32,7 @@ public class HealPoint : MonoBehaviour
     }
     public void HealByXp(int cost)
     {
-        if(statsManager.xpCount > cost)
+        if(statsManager.xpCount >= cost)
         {
             statsManager.xpCount = statsManager.xpCount - cost;
             statsManager.Health = statsManager.MaxHealth;

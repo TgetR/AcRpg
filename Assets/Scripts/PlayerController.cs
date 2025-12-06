@@ -26,7 +26,6 @@ public class PlayerController : MonoBehaviour
 
     //Controlled by StatsManager
     private StatsManager _manager;
-    private int _HP = 100;
     private int _maxHP = 100;
     private int _Gold = 100;
     private float _Xp = 100;
@@ -37,7 +36,6 @@ public class PlayerController : MonoBehaviour
     {
         //StatsManager
         _manager = GameObject.FindGameObjectWithTag("GameController").GetComponent<StatsManager>();
-        _HP = _manager.Health;
 
         _rb = GetComponent<Rigidbody2D>();
         _animator = GetComponent<Animator>();
@@ -96,10 +94,10 @@ public class PlayerController : MonoBehaviour
     #region CheckMethods
     void UpdateAndCheckStats()
     {
-        HpText.text = "HP: " + _HP + "/" + _maxHP;
+        HpText.text = "HP: " + _manager.Health + "/" + _maxHP;
         GoldText.text = "Gold: " + _Gold;
         XpText.text = "XP: " + (int)_Xp;
-        if (_HP <= 0)
+        if (_manager.Health <= 0)
         {
             SceneManager.LoadScene("GameOver");
         }
@@ -184,9 +182,9 @@ public class PlayerController : MonoBehaviour
         transform.localScale = new Vector3(transform.localScale.x * -1, transform.localScale.y, transform.localScale.z);
     }
 
-    public void ChangeHealth(int heatlh)
+    public void ChangeHealth(int health)
     {
-        _HP += heatlh;
+        _manager.Health += health;
     }
     #endregion
 

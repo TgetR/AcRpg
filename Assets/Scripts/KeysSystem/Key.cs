@@ -14,7 +14,7 @@ public class Key : MonoBehaviour
         if (collision.transform.CompareTag("Player"))
         {
             _keyDropController.KeysCanUse = true;
-            _keyDropController.KeyDropEnabled = false;
+            _keyDropController.KeysBalance++;
             _notify.Notify("You reached a key!", 3);
             Destroy(this.gameObject);
         }

@@ -1,6 +1,6 @@
 using UnityEngine;
 
-public class EntryToNewLocation : MonoBehaviour
+public class ReturnToPreviosLocation : MonoBehaviour
 {
     public bool isWorking = true;
     [SerializeField] Vector2 tpTo;
@@ -8,32 +8,22 @@ public class EntryToNewLocation : MonoBehaviour
     GameObject player;
     private OnScreenNotify _notify;
     private bool inZone = false;
-    private KeySystemController _keySystemController;
-    
     void Start()
     {
-        _keySystemController = GameObject.FindGameObjectWithTag("KeyController").GetComponent<KeySystemController>();
-        _notify = GameObject.FindGameObjectWithTag("Notifyer").GetComponent<OnScreenNotify>();
         player = GameObject.FindGameObjectWithTag("Player");
         canvas = transform.GetChild(0).gameObject;
         canvas.SetActive(false);
+        _notify = GameObject.FindGameObjectWithTag("Notifyer").GetComponent<OnScreenNotify>();
     }
     void Update()
     {
-        if(Input.GetKey(KeyCode.E) && inZone)
+        if (Input.GetKey(KeyCode.E) && inZone && isWorking)
         {
-            if (isWorking && _keySystemController.KeysCanUse && _keySystemController.KeysBalance > 0)
-            {
-                _notify.Notify("You enter to new location!", 1);
-                player.transform.position = tpTo;   
-            }
-            else
-            {
-                _notify.Notify("You can't enter to this location!", 3);
-            }
+            _notify.Notify("You returned to previos location!", 1);
+            player.transform.position = tpTo;   
         }
-
     }
+
     void OnTriggerEnter2D(Collider2D collision)
     {
         if (collision.transform.CompareTag("Player"))
@@ -50,4 +40,5 @@ public class EntryToNewLocation : MonoBehaviour
            inZone = false;
         } 
     }
+    
 }

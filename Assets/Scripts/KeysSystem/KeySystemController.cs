@@ -5,6 +5,7 @@ public class KeySystemController : MonoBehaviour
 {
     public bool KeysCanUse = false;
     public bool KeyDropEnabled = true;
+    public int KeysBalance = 0;
 
     [SerializeField] int NumberOfLocations = 1; //How many locations. Starts from 0, but 0 its 1
     [SerializeField] int KillsMinimumForKeys = 2;

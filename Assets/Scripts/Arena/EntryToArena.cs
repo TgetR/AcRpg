@@ -1,9 +1,13 @@
+using NUnit.Framework;
 using Unity.IO.LowLevel.Unsafe;
 using UnityEngine;
 
 public class EntryToArena : MonoBehaviour
 {
+    public bool isEntryCostKeys = true;
+    public int KeysNeeded = 1;
     [SerializeField] private Vector2 Destination;
+    [SerializeField] private KeySystemController _keySystemController;
     [SerializeField] private GameObject ConfirmMenu;
     [SerializeField] private ArenaSpawner ArenaSpawner;
     private OnScreenNotify _notify;
@@ -16,8 +20,15 @@ public class EntryToArena : MonoBehaviour
     {
         if(collision.CompareTag("Player") && !collision.GetComponent<PlayerController>().onArena)
         {
-            ConfirmMenu.SetActive(true);
-            Time.timeScale = 0;  
+            if(isEntryCostKeys && KeysNeeded <= _keySystemController.KeysBalance || !isEntryCostKeys)
+            {
+                ConfirmMenu.SetActive(true);
+                Time.timeScale = 0;  
+            } 
+            else
+            {
+                _notify.Notify("Not enough keys to enter!", 2);
+            }
         }
     }
 

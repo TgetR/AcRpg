@@ -14,36 +14,18 @@ public class HealPoint : MonoBehaviour
         _ticktes = statsManager.HealTickets;
         ticktesCount.text = $"You have: {_ticktes} tickets.";
     }
-    public void HealByGold(int cost)
+    public void BuyHealTicketByGold(int cost)
     {
-        if(statsManager.Gold >= cost)
-        {
-            statsManager.Gold -= cost;
-            statsManager.Health = statsManager.MaxHealth;
-            notifier.Notify("You health now full!", 1);
-            _ticktes = statsManager.HealTickets;
-            ticktesCount.text = $"You have: {_ticktes} tickets.";
-        }
-        else
-        {
-            notifier.Notify("Not enought money!", 4);
-        }
+        statsManager.BuyHeal(0, cost);
+        _ticktes = statsManager.HealTickets;
+        ticktesCount.text = $"You have: {_ticktes} tickets.";
 
     }
-    public void HealByXp(int cost)
+    public void BuyHealTicketByXp(int cost)
     {
-        if(statsManager.xpCount >= cost)
-        {
-            statsManager.xpCount = statsManager.xpCount - cost;
-            statsManager.Health = statsManager.MaxHealth;
-            notifier.Notify("You health now full!", 1);
-            _ticktes = statsManager.HealTickets;
-            ticktesCount.text = $"You have: {_ticktes} tickets.";
-        }
-        else
-        {
-            notifier.Notify("Not enought xp!", 4);
-        }
+        statsManager.BuyHeal(1, cost);
+        _ticktes = statsManager.HealTickets;
+        ticktesCount.text = $"You have: {_ticktes} tickets.";
     }
     public void HealByTicket()
     {

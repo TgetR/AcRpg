@@ -3,11 +3,11 @@ using UnityEngine;
 public class EntryToNewLocation : MonoBehaviour
 {
     public Vector2 tpTo;
-    KeyDropController _keyDropController;
+    KeySystemController _keySystemController;
     private OnScreenNotify _notify;
     void Start()
     {
-        _keyDropController = GameObject.FindGameObjectWithTag("KeyController").GetComponent<KeyDropController>();
+        _keySystemController = GameObject.FindGameObjectWithTag("KeyController").GetComponent<KeySystemController>();
         _notify = GameObject.FindGameObjectWithTag("Notifyer").GetComponent<OnScreenNotify>();
     }
     void OnCollisionEnter2D(Collision2D collision)

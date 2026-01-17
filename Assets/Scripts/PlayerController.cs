@@ -8,6 +8,10 @@ public class PlayerController : MonoBehaviour
 {
     #region Setup
     public int FacingDirection = 1; // 1 or -1  1-Right  -1-Left
+    public bool onArena = false;
+    [SerializeField] Vector2 arenaRespawnPoint;
+    [SerializeField] ArenaCounter arenaCounter;
+    [SerializeField] ArenaSpawner ArenaSpawner;
 
     [SerializeField] TMP_Text HpText;
     [SerializeField] TMP_Text GoldText;
@@ -83,9 +87,17 @@ public class PlayerController : MonoBehaviour
         HpText.text = "HP: " + _manager.Health + "/" + _manager.MaxHealth;
         GoldText.text = "Gold: " + _manager.Gold;
         XpText.text = "XP: " + (int)_manager.xpCount;
+
         if (_manager.Health <= 0)
         {
-            SceneManager.LoadScene("GameOver");
+            if (!onArena) SceneManager.LoadScene("GameOver");
+            else
+            {
+               transform.position = arenaRespawnPoint;
+               _manager.Health = _manager.MaxHealth;
+                arenaCounter.DisplayStatistic();
+                ArenaSpawner.DisableSpawner();
+            } 
         }
     }
 

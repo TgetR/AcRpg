@@ -1,7 +1,7 @@
 using System.Collections.Generic;
 using UnityEngine;
 
-public class KeyDropController : MonoBehaviour
+public class KeySystemController : MonoBehaviour
 {
     public bool KeysCanUse = false;
     public bool KeyDropEnabled = true;

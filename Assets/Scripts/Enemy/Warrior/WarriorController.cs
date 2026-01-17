@@ -5,7 +5,7 @@ public class WarriorController : MonoBehaviour
 {
 
     public float KnockBackForce = 0.2f;
-    public int FacingDirection = 1; // 1 or -1  1-Right  -1-Left
+    public int FacingDirection = 1; // 1 or -1  1-Right  -1-Left\
 
     private Animator _animator;
     private bool _isKnockedBack;

@@ -114,4 +114,34 @@ public class StatsManager : MonoBehaviour
     {
         _xpLvlMultiplier += multi;
     }
+    public void BuyHeal(int MethodId, int cost)
+    {
+        switch (MethodId)
+        {
+            case 0: //Gold
+                if (Gold >= cost)
+                {
+                    Gold -= cost;
+                    HealTickets++;
+                    _notify.Notify("You bought 1 Heal Ticket!", 1);
+                }
+                else
+                {
+                    _notify.Notify("Not enough money!", 4);
+                }
+                break;
+            case 1: //XP
+                if (xpCount >= cost)
+                {
+                    xpCount -= cost;
+                    HealTickets++;
+                    _notify.Notify("You bought 1 Heal Ticket!", 1);
+                }
+                else
+                {
+                    _notify.Notify("Not enough xp!", 4);
+                }
+                break;
+        }
+    }
 }

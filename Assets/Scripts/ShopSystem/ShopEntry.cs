@@ -3,29 +3,43 @@ using UnityEngine;
 
 public class ShopEntry : MonoBehaviour
 {
-    public GameObject ShopEntryCofirmObject;
-    private bool _cooldown;
+    public bool isWorking = true;
+    private bool inZone = false;
+    [SerializeField] private GameObject ShopMainMenuObject;
+    GameObject canvas;
 
     void Start()
     {
-        ShopEntryCofirmObject.SetActive(false);
+        canvas = transform.GetChild(0).gameObject;
+
+        canvas.SetActive(false);
+        ShopMainMenuObject.SetActive(false);
+    }
+
+    void Update()
+    {
+        if(Input.GetKey(KeyCode.E) && inZone && isWorking)
+        {
+                ShopMainMenuObject.SetActive(true);
+                Time.timeScale = 0;
+                canvas.SetActive(false);
+        }
     }
 
     void OnTriggerEnter2D(Collider2D collision)
     {
-        if (collision.transform.CompareTag("Player") && !_cooldown)
+        if (collision.transform.CompareTag("Player"))
         {
-            //Open ShopEntry confirm
-            ShopEntryCofirmObject.SetActive(true);
-            Time.timeScale = 0;
-            Debug.Log("Entry");
-            StartCoroutine(CooldownEntry());
+            canvas.SetActive(true);
+            inZone = true;
         }
     }
-    IEnumerator CooldownEntry()
+    private void OnTriggerExit2D(Collider2D other) 
     {
-        _cooldown = true;
-        yield return new WaitForSeconds(2);
-        _cooldown = false;
+        if (other.transform.CompareTag("Player"))
+        {
+           canvas.SetActive(false); 
+           inZone = false;
+        } 
     }
 }

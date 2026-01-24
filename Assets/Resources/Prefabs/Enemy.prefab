@@ -85,7 +85,7 @@ SpriteRenderer:
   m_GlobalIlluminationMeshLod: 0
   m_SortingLayerID: 0
   m_SortingLayer: 0
-  m_SortingOrder: 0
+  m_SortingOrder: 1
   m_Sprite: {fileID: 7384290322352760091, guid: f921472022b19df43b0dcb90914f3b37, type: 3}
   m_Color: {r: 1, g: 1, b: 1, a: 1}
   m_FlipX: 0
@@ -211,6 +211,9 @@ MonoBehaviour:
   m_EditorClassIdentifier: Assembly-CSharp::EnemyHealthSystem
   LocationNumber: 0
   HP: 10
+  _IsArenaUnit: 0
+  xpReach: 50
+  goldReach: 35
 --- !u!1 &2445826574822441810
 GameObject:
   m_ObjectHideFlags: 0

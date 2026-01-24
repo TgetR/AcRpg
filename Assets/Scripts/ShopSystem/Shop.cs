@@ -91,9 +91,9 @@ public class Shop : MonoBehaviour
             return;
         }
         
-        _statsManager.AddStatBonus(0, item.buffHealth - item.debuffHealth);
-        _statsManager.AddStatBonus(1, item.buffSpeed - item.debuffSpeed);
-        _statsManager.AddStatBonus(2, item.buffDamage - item.debuffDamage);
+        _statsManager.AddStatBonus(StatsManager.StatType.Health, item.buffHealth - item.debuffHealth);
+        _statsManager.AddStatBonus(StatsManager.StatType.Speed, item.buffSpeed - item.debuffSpeed);
+        _statsManager.AddStatBonus(StatsManager.StatType.Damage, item.buffDamage - item.debuffDamage);
         _statsManager.AddXpMultiplier(item.buffXpMultiplier - item.debuffXpMultiplier);
         
         Debug.Log($"Item {id} ({item.itemDescription}) activated!");

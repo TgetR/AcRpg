@@ -19,12 +19,24 @@ public class ElevationEntry : MonoBehaviour
             {
                 collision.gameObject.GetComponent<SpriteRenderer>().sortingOrder = 15;
                 _onElevation = true;
-            }
-            else
+        }
+    }
+    }
+    void OnTriggerExit2D(Collider2D collision)
+    {
+        if (collision.gameObject.tag == "Player")
+        {
+            foreach (Collider2D mountain in MountainColliders)
+            {
+                mountain.enabled = true;
+            }   
+
+            if (_onElevation)
             {
                 collision.gameObject.GetComponent<SpriteRenderer>().sortingOrder = 1;
                 _onElevation = false;
             }
+            else return;
         }
     }
 }

@@ -1,5 +1,6 @@
 using System;
 using System.Collections;
+using System.Collections.Generic;
 using UnityEngine;
 
 public class StatsManager : MonoBehaviour
@@ -11,6 +12,7 @@ public class StatsManager : MonoBehaviour
     public int Gold = 100;
     public float xpCount = 0;
     public int HealTickets = 2;
+    public enum StatType { Health, Speed, Damage }
 
     //XP
     private int _xpLvlDefault = 100; //How many xp do you need to fist lvl up;
@@ -23,10 +25,12 @@ public class StatsManager : MonoBehaviour
     private int _UpgradePointsUsed = 0;
     private int _UpgradePointsUsedLimit = 25;
     //Regular bonus
-    private int _RegularBonusSpeed = 2;
-    private int _RegularBonusHealth = 30;
-    private int _RegularBonusDamage = 5;
-    
+    private Dictionary<StatType, int> _bonuses = new Dictionary<StatType, int>() 
+    {
+        { StatType.Health, 30 },
+        { StatType.Speed, 2 },
+        { StatType.Damage, 5 }
+    };
 
     private OnScreenNotify _notify;
     void Start()
@@ -62,27 +66,31 @@ public class StatsManager : MonoBehaviour
         _UpgradePointsAvailable += count;
     }
 
-    public void UpgradeStat(int statID)
+    public void UpgradeStat(StatType type)
     {
-        int bonus = statID switch
-        {
-            0 => _RegularBonusHealth,
-            1 => _RegularBonusSpeed,
-            2 => _RegularBonusDamage,
-            _ => 0
-        };
-        UpgradeStat(statID, bonus);
+            if (!TrySpendUpgradePoint()) return;
+
+            int bonus = _bonuses[type];
+
+            switch (type)
+            {
+                case StatType.Health: MaxHealth += bonus; Health += bonus; break;
+                case StatType.Speed: Speed += bonus; break;
+                case StatType.Damage: Damage += bonus; break;
+            }
     }
 
-    public void UpgradeStat(int statID, int customBonus)
-    {
+    public void UpgradeStat(StatType type, int customBonus)
+    {   
         if (!TrySpendUpgradePoint()) return;
 
-        switch (statID)
+        int bonus = customBonus;
+
+        switch (type)
         {
-            case 0: MaxHealth += customBonus; break;
-            case 1: Speed += customBonus; break;
-            case 2: Damage += customBonus; break;
+            case StatType.Health: MaxHealth += customBonus; break;
+            case StatType.Speed: Speed += customBonus; break;
+            case StatType.Damage: Damage += customBonus; break;
         }
     }
 
@@ -100,13 +108,13 @@ public class StatsManager : MonoBehaviour
         return true;
     }
 
-    public void AddStatBonus(int statID, int bonus)
+    public void AddStatBonus(StatType type, int bonus)
     {
-        switch (statID)
+        switch (type)
         {
-            case 0: MaxHealth += bonus; break;
-            case 1: Speed += bonus; break;
-            case 2: Damage += bonus; break;
+            case StatType.Health: MaxHealth += bonus; break;
+            case StatType.Speed: Speed += bonus; break;
+            case StatType.Damage: Damage += bonus; break;
         }
     }
 

@@ -13,7 +13,7 @@ MonoBehaviour:
   m_Name: ColdForestEffect
   m_EditorClassIdentifier: Assembly-CSharp::Effect
   effectId: 1
-  defaultDuration: 5
+  defaultDuration: 10
   useBuffSystem: 0
   buffSpeed: 0
   buffHealth: 0

@@ -7,6 +7,7 @@ public class EnemyHealthSystem : MonoBehaviour
     [SerializeField] private bool _IsArenaUnit = false;
     [SerializeField] private int xpReach = 50;
     [SerializeField] private int goldReach = 35;
+    [SerializeField] private QuestChecker questChecker;
     private ArenaSpawner _arenaSpawner;
 
     private StatsManager _Smanager;
@@ -35,6 +36,7 @@ public class EnemyHealthSystem : MonoBehaviour
             _Smanager.xpCount += xpReach;
             _Smanager.Gold += goldReach;
             if(_IsArenaUnit) _arenaCounter.AddKill(xpReach,goldReach);
+            questChecker.AddEnemyKill();
         }
     }
 

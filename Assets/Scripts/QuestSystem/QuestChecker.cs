@@ -1,5 +1,6 @@
 using System.Collections;
 using TMPro;
+using Unity.VisualScripting;
 using UnityEngine;
 
 public class QuestChecker : MonoBehaviour
@@ -13,21 +14,23 @@ public class QuestChecker : MonoBehaviour
     private bool isEnemyKillQuestActive = false;
     private int enemyKillCount = 0;
     private int enemyKillTarget = 0;
+    private StatsManager _Smanager;
 
     void Start()
     {
         questText.gameObject.SetActive(false);
         questProgressText.gameObject.SetActive(false);
+        _Smanager = GameObject.FindGameObjectWithTag("GameController").GetComponent<StatsManager>();
     }
 
     void Update()
     {
-        CheckEnemyKillQuest(enemyKillTarget);
+        if(isEnemyKillQuestActive && !questCompleted) CheckEnemyKillQuest(enemyKillTarget);
     }
 
     public void TakeQuest(string questDescription, int typeId, float target)
     {
-        if (!questTaked)
+        if (!questTaked && !questCompleted)
         {
             questText.gameObject.SetActive(true);
             questText.text = questDescription;
@@ -37,9 +40,11 @@ public class QuestChecker : MonoBehaviour
             enemyKillTarget = (int)target;
             Debug.Log("Quest taken: " + questDescription);
         }
-        else
+        else if (questCompleted && questTaked)
         {
-            Debug.Log("You have already taken a quest.");
+            _Smanager.Gold += 100; // Reward for completing the quest
+            _Smanager.xpCount += 100; // Reward for completing the quest
+            DeleteQuest();
         }
 
         switch (typeId)
@@ -58,21 +63,19 @@ public class QuestChecker : MonoBehaviour
     }
     public void CompleteQuest()
     {
-        if (!questCompleted)
+        if (!questCompleted && questTaked)
         {
             questText.text = "Quest Completed! Take you reward.";
+            questProgressText.gameObject.SetActive(false);
             questCompleted = true;
             Debug.Log("Quest completed!");
-        }
-        else
-        {
-            Debug.Log("You have already completed this quest.");
         }
     }
 
     public void DeleteQuest()
     {
         questText.gameObject.SetActive(false);
+        questProgressText.gameObject.SetActive(false);
         questTaked = false;
         questCompleted = false;
 

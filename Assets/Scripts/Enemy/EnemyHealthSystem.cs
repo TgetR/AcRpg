@@ -7,9 +7,9 @@ public class EnemyHealthSystem : MonoBehaviour
     [SerializeField] private bool _IsArenaUnit = false;
     [SerializeField] private int xpReach = 50;
     [SerializeField] private int goldReach = 35;
-    [SerializeField] private QuestChecker questChecker;
-    private ArenaSpawner _arenaSpawner;
 
+    private QuestChecker _questChecker;
+    private ArenaSpawner _arenaSpawner;
     private StatsManager _Smanager;
     private KeySystemController _KeySystem;
     private ArenaCounter _arenaCounter;
@@ -22,6 +22,7 @@ public class EnemyHealthSystem : MonoBehaviour
             _arenaSpawner = _arenaCounter.transform.parent.GetChild(1).GetComponent<ArenaSpawner>();
         } 
 
+        _questChecker = GameObject.FindGameObjectWithTag("GameController").GetComponent<QuestChecker>();
         _Smanager = GameObject.FindGameObjectWithTag("GameController").GetComponent<StatsManager>();
         _KeySystem = GameObject.FindGameObjectWithTag("KeyController").GetComponent<KeySystemController>();
     }
@@ -36,7 +37,7 @@ public class EnemyHealthSystem : MonoBehaviour
             _Smanager.xpCount += xpReach;
             _Smanager.Gold += goldReach;
             if(_IsArenaUnit) _arenaCounter.AddKill(xpReach,goldReach);
-            questChecker.AddEnemyKill();
+            _questChecker.AddEnemyKill();
         }
     }
 

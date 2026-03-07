@@ -7,8 +7,11 @@ public class QuestChecker : MonoBehaviour
 {
     public TMP_Text questText;
     public TMP_Text questProgressText;
-    private bool questTaked = false;
+    private bool questTaked = false; 
     private bool questCompleted = false;
+    
+    public bool GetQuestTakenStatus(){ return questTaked; }
+    public bool GetQuestCompletedStatus(){ return questCompleted; }
 
     // Variables for enemy kill quest
     private bool isEnemyKillQuestActive = false;
@@ -28,7 +31,7 @@ public class QuestChecker : MonoBehaviour
         if(isEnemyKillQuestActive && !questCompleted) CheckEnemyKillQuest(enemyKillTarget);
     }
 
-    public void TakeQuest(string questDescription, int typeId, float target)
+    public void TakeQuest(string questDescription, int typeId, float target, int rewardGold = 100, int rewardXP = 100)
     {
         if (!questTaked && !questCompleted)
         {
@@ -42,11 +45,10 @@ public class QuestChecker : MonoBehaviour
         }
         else if (questCompleted && questTaked)
         {
-            _Smanager.Gold += 100; // Reward for completing the quest
-            _Smanager.xpCount += 100; // Reward for completing the quest
+            _Smanager.Gold += rewardGold; // Reward for completing the quest
+            _Smanager.xpCount += rewardXP; // Reward for completing the quest
             DeleteQuest();
         }
-
         switch (typeId)
         {
             case 1:

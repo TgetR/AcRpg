@@ -4,9 +4,9 @@ using UnityEngine;
 public class Quester : MonoBehaviour
 {
     public int questTypeId = 0;
-    public QuestChecker questChecker;
     public List<string> typeNames = new List<string>();
     [SerializeField] private GameObject questCanvas;
+    [SerializeField] public QuestChain questChain;
     void Start()
     {
         questCanvas.SetActive(false);
@@ -21,8 +21,7 @@ public class Quester : MonoBehaviour
             switch (questTypeId)
             {
                 case 0:
-                    //Enemy kill quest
-                     questChecker.TakeQuest("Kill 5 enemies", 1, 5);
+                     questChain.Type0ChainCheck();
                     break;
                 case 1:
                     //Collect item quest

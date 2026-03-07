@@ -4,22 +4,24 @@ using UnityEngine;
 public class QuestChain : MonoBehaviour
 {
     [SerializeField] private QuestChecker questChecker;
-
-    int Type0Activations = 0; //Type 0 - Enemy kill quest
-    int Type1Activations = 0; //Type 1 - Collect item quest
-    int Type2Activations = 0; //Type 2 - Explore location quest
-    //TYPE 1 AND TYPE 2 temporary not used 
+     private OnScreenNotify _notify;
 
     bool questTaken = false;
     bool questCompleted = false;
+
     bool delayEnd = true;
-    private OnScreenNotify _notify;
 
     void Start()
     {
         _notify = GameObject.FindGameObjectWithTag("Notifyer").GetComponent<OnScreenNotify>();
     }
 
+    //-------------------------------------------------
+    // TYPE 0 - ENEMY KILL QUEST CHAIN
+    //-------------------------------------------------
+    #region Type 0 - Enemy kill quest chain
+
+    int Type0Activations = 0; //Type 0 - Enemy kill quest
     public void Type0ChainCheck()
     {
         if (delayEnd)
@@ -84,10 +86,83 @@ public class QuestChain : MonoBehaviour
             }   
         }
     }
+    #endregion
 
+    //-------------------------------------------------
+    // TYPE 1 - ARENA QUEST CHAIN
+    //-------------------------------------------------
+    #region Type 1 - Arena quest chain
+
+    int Type1Activations = 0; //Type 1 - Arena quest
+    public void Type1ChainCheck()
+    {
+        if (delayEnd)
+        {
+            switch (Type1Activations)
+            {
+                case 0:
+                    if (!questCompleted && !questTaken)
+                    {
+                    questChecker.TakeQuest("Play 1 arena match", 2, 1, 50, 50);
+                    Debug.Log("Type 1 quest taken.");
+                    StartCoroutine(Delay());
+                    }
+
+                    else if (questCompleted && questTaken)
+                    {
+                        Type1Activations++;
+                        questChecker.DeleteQuest();
+                        Debug.Log("Type 1 quest completed and deleted.");
+                        StartCoroutine(Delay());
+                    }
+                    return;
+
+                case 1:
+                    if (!questCompleted && !questTaken)
+                    {
+                    questChecker.TakeQuest("Play 3 arena match", 2, 3, 75, 75);
+                    Debug.Log("Type 1 quest taken.");
+                    StartCoroutine(Delay());
+                    }
+
+                    else if (questCompleted && questTaken)
+                    {
+                        Type1Activations++;
+                        questChecker.DeleteQuest();
+                        Debug.Log("Type 1 quest completed and deleted.");
+                        StartCoroutine(Delay());
+                    }
+                    return;
+
+                case 2:
+                    if (!questCompleted && !questTaken)
+                    {
+                    questChecker.TakeQuest("Play 5 arena match", 2, 5, 150, 150);
+                    Debug.Log("Type 1 quest taken.");
+                    StartCoroutine(Delay());
+                    }
+
+                    else if (questCompleted && questTaken)
+                    {
+                        Type1Activations++;
+                        questChecker.DeleteQuest();
+                        Debug.Log("Type 1 quest completed and deleted.");
+                        StartCoroutine(Delay());
+                    }
+                    return;
+
+                case 3:
+                    _notify.Notify("No more quest for you! Find new adventures!", 2);
+                    StartCoroutine(Delay()); break;
+                    
+                default:
+                    _notify.Notify("ERROR: Invalid quest stage. Try find another quest!", 4); break;
+            }
+        }
+    }
+    #endregion
     void Update()
     {
-        if(Input.GetKeyDown(KeyCode.K)) Debug.Log(Type0Activations);
         questTaken = questChecker.GetQuestTakenStatus();
         questCompleted = questChecker.GetQuestCompletedStatus();
     }

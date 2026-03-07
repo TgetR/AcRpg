@@ -7,6 +7,7 @@ public class EntryToArena : MonoBehaviour
     public bool isEntryCostKeys = true;
     public bool isWorking = true;
     public int KeysNeeded = 1;
+    public int EntryNumber = 0; //For quest
     [SerializeField] private Vector2 Destination;
     [SerializeField] private KeySystemController _keySystemController;
     [SerializeField] private GameObject ConfirmMenu;
@@ -63,6 +64,7 @@ public class EntryToArena : MonoBehaviour
         ConfirmMenu.SetActive(false);
         Time.timeScale = 1;
         ArenaSpawner.ActivateSpawner();
+        EntryNumber++;
     }
     public void CancelEntry()
     {

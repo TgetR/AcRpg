@@ -24,7 +24,7 @@ public class Quester : MonoBehaviour
                      questChain.Type0ChainCheck();
                     break;
                 case 1:
-                    //Collect item quest
+                    questChain.Type1ChainCheck();
                     break;
                 case 2:
                     //Explore location quest

@@ -17,8 +17,17 @@ public class QuestChecker : MonoBehaviour
     private bool isEnemyKillQuestActive = false;
     private int enemyKillCount = 0;
     private int enemyKillTarget = 0;
+    // Variables for arena play quest
+    [SerializeField] private EntryToArena arenaEntry;
+    private bool isArenaPlayQuestActive = false;
+    private int arenaPlayTarget = 0;
+
+
     private StatsManager _Smanager;
 
+    //-----------------------------------------
+    // Unity methods
+    //-----------------------------------------
     void Start()
     {
         questText.gameObject.SetActive(false);
@@ -29,8 +38,12 @@ public class QuestChecker : MonoBehaviour
     void Update()
     {
         if(isEnemyKillQuestActive && !questCompleted) CheckEnemyKillQuest(enemyKillTarget);
+        else if (isArenaPlayQuestActive && !questCompleted) CheckArenaPlayQuest(arenaPlayTarget);
     }
 
+    //-------------------------------
+    // Quest management methods
+    //-------------------------------
     public void TakeQuest(string questDescription, int typeId, float target, int rewardGold = 100, int rewardXP = 100)
     {
         if (!questTaked && !questCompleted)
@@ -40,7 +53,6 @@ public class QuestChecker : MonoBehaviour
             questProgressText.gameObject.SetActive(true);
             questProgressText.text = "Progress: 0/" + target;
             questTaked = true;
-            enemyKillTarget = (int)target;
             Debug.Log("Quest taken: " + questDescription);
         }
         else if (questCompleted && questTaked)
@@ -54,15 +66,19 @@ public class QuestChecker : MonoBehaviour
             case 1:
                 //First type - Enemy kill quest
                 isEnemyKillQuestActive = true;
+                enemyKillTarget = (int)target;
                  break;
             case 2:
-                // Logic for quest type 2
+                // Second type - Arena playes quest
+                isArenaPlayQuestActive = true;
+                arenaPlayTarget = (int)target;
                 break;
             default:
                 Debug.Log("Unknown quest type.");
                 break;
         }
     }
+
     public void CompleteQuest()
     {
         if (!questCompleted && questTaked)
@@ -87,12 +103,20 @@ public class QuestChecker : MonoBehaviour
         enemyKillCount = 0;
         enemyKillTarget = 0;
         }
+        else if (isArenaPlayQuestActive)        
+        {
+            isArenaPlayQuestActive = false;
+            arenaEntry.EntryNumber = 0;
+        }
 
         //else if (other quest types) { reset their specific variables }
 
         Debug.Log("Quest deleted.");
     }
 
+    // --------------------------------
+    // Specific quest type check methods
+    // --------------------------------
     void CheckEnemyKillQuest(float targetKills)
     {
         float currentKills = enemyKillCount;
@@ -100,6 +124,16 @@ public class QuestChecker : MonoBehaviour
         if (currentKills >= targetKills) CompleteQuest();
     }
 
+    void CheckArenaPlayQuest(float targetEntries)
+    {
+        float currentEntries = arenaEntry.EntryNumber;
+        questProgressText.text = "Progress: " + currentEntries + "/" + targetEntries;
+        if (currentEntries >= targetEntries) CompleteQuest();
+    }
+
+    //--------------------------------
+    // Another specific quest type methods
+    //--------------------------------
     public void AddEnemyKill()
     {
         if(isEnemyKillQuestActive) enemyKillCount++;

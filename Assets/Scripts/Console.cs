@@ -80,21 +80,6 @@ public class Console : MonoBehaviour
             {
                 switch (input[1].ToLower())
                 {
-                    case "take":
-                        switch (input[2].ToLower())
-                        {
-                            case "0":
-                                questChain.Type0ChainCheck();
-                                return "Type 0 quest taken.";
-                            case "1":
-                                // Logic for taking a type 1 quest
-                                return "Type 1 quest taken.";
-                            case "2":
-                                // Logic for taking a type 2 quest
-                                return "Type 2 quest taken.";
-                            default:
-                                return $"Unknown quest type: {input[2]}";
-                        }
                     case "complete":
                         questChecker.CompleteQuest();
                         return "Quest completed.";

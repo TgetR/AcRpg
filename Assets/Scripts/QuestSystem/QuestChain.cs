@@ -1,170 +1,62 @@
 using System.Collections;
+using System.Collections.Generic;
 using UnityEngine;
 
 public class QuestChain : MonoBehaviour
 {
     [SerializeField] private QuestChecker questChecker;
-     private OnScreenNotify _notify;
+    [SerializeField] private Dialogue dialogueManager;
+    private OnScreenNotify _notify;
 
-    bool questTaken = false;
-    bool questCompleted = false;
-
-    bool delayEnd = true;
+    private bool delayEnd = true;
+    private List<int> QuestActivations = new List<int>(); // [ID] - Quest ID by type, number in [ID] - Activations of this quest type
 
     void Start()
     {
         _notify = GameObject.FindGameObjectWithTag("Notifyer").GetComponent<OnScreenNotify>();
     }
 
-    //-------------------------------------------------
-    // TYPE 0 - ENEMY KILL QUEST CHAIN
-    //-------------------------------------------------
-    #region Type 0 - Enemy kill quest chain
-
-    int Type0Activations = 0; //Type 0 - Enemy kill quest
-    public void Type0ChainCheck()
+    public void QuestChainCheck(QuestData questData, int typeID)
     {
-        if (delayEnd)
+        bool questTaken = questChecker.GetQuestTakenStatus();
+        bool questCompleted = questChecker.GetQuestCompletedStatus();
+
+        while (QuestActivations.Count <= typeID)
+                QuestActivations.Add(0);
+        
+        int stage = QuestActivations[typeID];
+        if (stage >= questData.takeDialogue.Length)
         {
-            switch (Type0Activations)
-            {
-                case 0:
-                    if (!questCompleted && !questTaken)
-                    {
-                    questChecker.TakeQuest("Kill 5 enemies", 1, 5, 50, 50);
-                    Debug.Log("Type 0 quest taken.");
-                    StartCoroutine(Delay());
-                    }
-
-                    else if (questCompleted && questTaken)
-                    {
-                        Type0Activations++;
-                        questChecker.DeleteQuest();
-                        Debug.Log("Type 0 quest completed and deleted.");
-                        StartCoroutine(Delay());
-                    }
-                    return;
-                case 1:
-                    if (!questCompleted && !questTaken)
-                    {
-                    questChecker.TakeQuest("Kill 10 enemies", 1, 10, 150, 150);
-                    Debug.Log("Type 0 quest taken. Stage 2");
-                    StartCoroutine(Delay());
-                    }
-
-                    else if (questCompleted && questTaken)
-                    {
-                        Type0Activations++;
-                        questChecker.DeleteQuest();
-                        Debug.Log("Type 0 quest completed and deleted.");
-                        StartCoroutine(Delay());
-                    }
-                    return;
-                case 2:
-                    if (!questCompleted && !questTaken)
-                    {
-                    questChecker.TakeQuest("Kill 20 enemies", 1, 20, 300, 300);
-                    Debug.Log("Type 0 quest taken.");
-                    StartCoroutine(Delay());
-                    }
-
-                    else if (questCompleted && questTaken)
-                    {
-                        Type0Activations++;
-                        questChecker.DeleteQuest();
-                        Debug.Log("Type 0 quest completed and deleted.");
-                        StartCoroutine(Delay());
-                    }
-                    return;
-                case 3:
-                    _notify.Notify("No more quest for you! Find new adventures!", 2);
-                    StartCoroutine(Delay()); break;
-                default:
-                    _notify.Notify("ERROR: Invalid quest stage. Try find another quest!", 4);
-                    StartCoroutine(Delay()); break;
-
-            }   
+            _notify.Notify("No more quests! Find new adventures!", 2);
+            return;
         }
-    }
-    #endregion
 
-    //-------------------------------------------------
-    // TYPE 1 - ARENA QUEST CHAIN
-    //-------------------------------------------------
-    #region Type 1 - Arena quest chain
-
-    int Type1Activations = 0; //Type 1 - Arena quest
-    public void Type1ChainCheck()
-    {
         if (delayEnd)
         {
-            switch (Type1Activations)
+            if(!questTaken && !questCompleted)
             {
-                case 0:
-                    if (!questCompleted && !questTaken)
-                    {
-                    questChecker.TakeQuest("Play 1 arena match", 2, 1, 50, 50);
-                    Debug.Log("Type 1 quest taken.");
-                    StartCoroutine(Delay());
-                    }
+                List<string> DialogueText = new List<string>(questData.takeDialogue[stage].Split('/'));
+                dialogueManager.StartDialogue(DialogueText);
+                questChecker.QuestInteraction(questData.title, questData.type, questData.goal, questData.xpReward * (stage + 1), questData.goldReward * (stage + 1));
+                Debug.Log($"Type #{typeID}-{stage} quest taken.");
+                StartCoroutine(Delay());
+            }
 
-                    else if (questCompleted && questTaken)
-                    {
-                        Type1Activations++;
-                        questChecker.DeleteQuest();
-                        Debug.Log("Type 1 quest completed and deleted.");
-                        StartCoroutine(Delay());
-                    }
-                    return;
-
-                case 1:
-                    if (!questCompleted && !questTaken)
-                    {
-                    questChecker.TakeQuest("Play 3 arena match", 2, 3, 75, 75);
-                    Debug.Log("Type 1 quest taken.");
-                    StartCoroutine(Delay());
-                    }
-
-                    else if (questCompleted && questTaken)
-                    {
-                        Type1Activations++;
-                        questChecker.DeleteQuest();
-                        Debug.Log("Type 1 quest completed and deleted.");
-                        StartCoroutine(Delay());
-                    }
-                    return;
-
-                case 2:
-                    if (!questCompleted && !questTaken)
-                    {
-                    questChecker.TakeQuest("Play 5 arena match", 2, 5, 150, 150);
-                    Debug.Log("Type 1 quest taken.");
-                    StartCoroutine(Delay());
-                    }
-
-                    else if (questCompleted && questTaken)
-                    {
-                        Type1Activations++;
-                        questChecker.DeleteQuest();
-                        Debug.Log("Type 1 quest completed and deleted.");
-                        StartCoroutine(Delay());
-                    }
-                    return;
-
-                case 3:
-                    _notify.Notify("No more quest for you! Find new adventures!", 2);
-                    StartCoroutine(Delay()); break;
-                    
-                default:
-                    _notify.Notify("ERROR: Invalid quest stage. Try find another quest!", 4); break;
+            else if (questCompleted && questTaken)
+            {
+                QuestActivations[typeID]++;
+                questChecker.DeleteQuest();
+                List<string> DialogueText = new List<string>(questData.completeDialogue[stage].Split('/'));
+                dialogueManager.StartDialogue(DialogueText);
+                Debug.Log($"Type #{typeID}-{stage} quest completed and deleted.");
+                StartCoroutine(Delay());
+            }
+            else if(!questCompleted && questTaken)
+            {
+                _notify.Notify("You haven't completed the quest yet! Complete it first!", 3);
+                StartCoroutine(Delay());
             }
         }
-    }
-    #endregion
-    void Update()
-    {
-        questTaken = questChecker.GetQuestTakenStatus();
-        questCompleted = questChecker.GetQuestCompletedStatus();
     }
 
     IEnumerator Delay()

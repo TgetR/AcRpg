@@ -1,26 +1,28 @@
-using System.Collections;
 using TMPro;
-using Unity.VisualScripting;
 using UnityEngine;
 
 public class QuestChecker : MonoBehaviour
 {
-    public TMP_Text questText;
-    public TMP_Text questProgressText;
-    private bool questTaked = false; 
-    private bool questCompleted = false;
     
-    public bool GetQuestTakenStatus(){ return questTaked; }
-    public bool GetQuestCompletedStatus(){ return questCompleted; }
+    public bool GetQuestTakenStatus(){ return _questTaken; }
+    public bool GetQuestCompletedStatus(){ return _questCompleted; }
+
+    [SerializeField] private TMP_Text _questText;
+    [SerializeField] private TMP_Text _questProgressText;
+
+    private bool _questTaken = false; 
+    private bool _questCompleted = false;
 
     // Variables for enemy kill quest
-    private bool isEnemyKillQuestActive = false;
-    private int enemyKillCount = 0;
-    private int enemyKillTarget = 0;
+    private bool _isEnemyKillQuestActive = false;
+    private int _enemyKillCount = 0;
+    private int _enemyKillTarget = 0;
     // Variables for arena play quest
-    [SerializeField] private EntryToArena arenaEntry;
-    private bool isArenaPlayQuestActive = false;
-    private int arenaPlayTarget = 0;
+    private int _arenaEntryCount = 0;
+    private bool _isArenaPlayQuestActive = false;
+    private int _arenaPlayTarget = 0;
+    private int _rewardGold;
+    private int _rewardXP;
 
 
     private StatsManager _Smanager;
@@ -30,84 +32,92 @@ public class QuestChecker : MonoBehaviour
     //-----------------------------------------
     void Start()
     {
-        questText.gameObject.SetActive(false);
-        questProgressText.gameObject.SetActive(false);
+        _questText.gameObject.SetActive(false);
+        _questProgressText.gameObject.SetActive(false);
         _Smanager = GameObject.FindGameObjectWithTag("GameController").GetComponent<StatsManager>();
-    }
-
-    void Update()
-    {
-        if(isEnemyKillQuestActive && !questCompleted) CheckEnemyKillQuest(enemyKillTarget);
-        else if (isArenaPlayQuestActive && !questCompleted) CheckArenaPlayQuest(arenaPlayTarget);
     }
 
     //-------------------------------
     // Quest management methods
     //-------------------------------
-    public void TakeQuest(string questDescription, int typeId, float target, int rewardGold = 100, int rewardXP = 100)
+    public void QuestInteraction(string questDescription, int typeId, int target, int rewardGold = 100, int rewardXP = 100)
     {
-        if (!questTaked && !questCompleted)
+        if (_questTaken && !_questCompleted) return; // Prevent taking a new quest if one is already taken and not completed
+        else if (!_questTaken && !_questCompleted)
         {
-            questText.gameObject.SetActive(true);
-            questText.text = questDescription;
-            questProgressText.gameObject.SetActive(true);
-            questProgressText.text = "Progress: 0/" + target;
-            questTaked = true;
+            _rewardGold = rewardGold;
+            _rewardXP = rewardXP;
+
+            switch (typeId)
+            {
+                case 1:
+                    //First type - Enemy kill quest
+                    _isEnemyKillQuestActive = true;
+                    _enemyKillTarget = target;
+                    break;
+                case 2:
+                    // Second type - Arena playes quest
+                    _isArenaPlayQuestActive = true;
+                    _arenaPlayTarget = target;
+                    break;
+                default:
+                    Debug.Log("Unknown quest type.");
+                    break;
+            }
+
+            _questText.gameObject.SetActive(true);
+            _questText.text = questDescription;
+            _questProgressText.gameObject.SetActive(true);
+            _questProgressText.text = "Progress: 0/" + target;
+            _questTaken = true;
             Debug.Log("Quest taken: " + questDescription);
         }
-        else if (questCompleted && questTaked)
+        //Taking Reward for completed quest and deleting it
+        else if (_questCompleted && _questTaken)
         {
-            _Smanager.Gold += rewardGold; // Reward for completing the quest
-            _Smanager.xpCount += rewardXP; // Reward for completing the quest
             DeleteQuest();
         }
-        switch (typeId)
-        {
-            case 1:
-                //First type - Enemy kill quest
-                isEnemyKillQuestActive = true;
-                enemyKillTarget = (int)target;
-                 break;
-            case 2:
-                // Second type - Arena playes quest
-                isArenaPlayQuestActive = true;
-                arenaPlayTarget = (int)target;
-                break;
-            default:
-                Debug.Log("Unknown quest type.");
-                break;
-        }
+    }
+
+    void TakeReward(int rewardGold, int rewardXP)
+    {
+        _Smanager.Gold += rewardGold; // Reward for completing the quest
+        _Smanager.xpCount += rewardXP; // Reward for completing the quest
     }
 
     public void CompleteQuest()
     {
-        if (!questCompleted && questTaked)
+        if (!_questCompleted && _questTaken)
         {
-            questText.text = "Quest Completed! Take you reward.";
-            questProgressText.gameObject.SetActive(false);
-            questCompleted = true;
+            _questText.text = "Quest Completed! Take you reward.";
+            _questProgressText.gameObject.SetActive(false);
+            _questCompleted = true;
             Debug.Log("Quest completed!");
         }
     }
 
     public void DeleteQuest()
     {
-        questText.gameObject.SetActive(false);
-        questProgressText.gameObject.SetActive(false);
-        questTaked = false;
-        questCompleted = false;
+        _questText.gameObject.SetActive(false);
+        _questProgressText.gameObject.SetActive(false);
+        _questTaken = false;
+        _questCompleted = false;
 
-        if(isEnemyKillQuestActive)
+        if(_isEnemyKillQuestActive)
         {
-        isEnemyKillQuestActive = false;
-        enemyKillCount = 0;
-        enemyKillTarget = 0;
+        _isEnemyKillQuestActive = false;
+        _enemyKillCount = 0;
+        _enemyKillTarget = 0;
         }
-        else if (isArenaPlayQuestActive)        
+        else if (_isArenaPlayQuestActive)        
         {
-            isArenaPlayQuestActive = false;
-            arenaEntry.EntryNumber = 0;
+            _isArenaPlayQuestActive = false;
+            _arenaEntryCount = 0;
+            _arenaPlayTarget = 0;
         }
+        TakeReward(_rewardGold, _rewardXP);
+        _rewardGold = 0;
+        _rewardXP = 0;
 
         //else if (other quest types) { reset their specific variables }
 
@@ -117,17 +127,17 @@ public class QuestChecker : MonoBehaviour
     // --------------------------------
     // Specific quest type check methods
     // --------------------------------
-    void CheckEnemyKillQuest(float targetKills)
+    void CheckEnemyKillQuest(int targetKills)
     {
-        float currentKills = enemyKillCount;
-        questProgressText.text = "Progress: " + currentKills + "/" + targetKills;
+        int currentKills = _enemyKillCount;
+        _questProgressText.text = "Progress: " + currentKills + "/" + targetKills;
         if (currentKills >= targetKills) CompleteQuest();
     }
 
-    void CheckArenaPlayQuest(float targetEntries)
+    void CheckArenaPlayQuest(int targetEntries)
     {
-        float currentEntries = arenaEntry.EntryNumber;
-        questProgressText.text = "Progress: " + currentEntries + "/" + targetEntries;
+        int currentEntries = _arenaEntryCount;
+        _questProgressText.text = "Progress: " + currentEntries + "/" + targetEntries;
         if (currentEntries >= targetEntries) CompleteQuest();
     }
 
@@ -136,7 +146,20 @@ public class QuestChecker : MonoBehaviour
     //--------------------------------
     public void AddEnemyKill()
     {
-        if(isEnemyKillQuestActive) enemyKillCount++;
+        if(_isEnemyKillQuestActive && !_questCompleted)
+        {
+          _enemyKillCount++;
+          CheckEnemyKillQuest(_enemyKillTarget);
+        } 
+        //else ignore
+    }
+    public void AddArenaActivation()
+    {
+        if(_isArenaPlayQuestActive && !_questCompleted)
+        {
+          _arenaEntryCount++;
+          CheckArenaPlayQuest(_arenaPlayTarget);
+        } 
         //else ignore
     }
 }

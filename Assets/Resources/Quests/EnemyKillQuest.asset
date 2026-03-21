@@ -12,10 +12,18 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: a6e5554b09fcaed46b7dc9819d4c8175, type: 3}
   m_Name: EnemyKillQuest
   m_EditorClassIdentifier: Assembly-CSharp::QuestData
-  title: 
-  type: 0
-  goal: 0
-  xpReward: 0
-  goldReward: 0
-  takeDialogue: []
-  completeDialogue: []
+  title: Kill enemies
+  type: 1
+  goal: 5
+  xpReward: 40
+  goldReward: 25
+  takeDialogue:
+  - Hi! Can you help us? / Enemies attack us everyday! / Please kill 5 of them.
+  - I give you reward! / What? Help us again? / Yes, it could be helpful! / Kill
+    10 of them please
+  - Hi! Want a quest? / We decide to finally win! / Kill 15 of them please!
+  completeDialogue:
+  - Oh, it's you! / Enemies still attack us! / Anyway, thank you! Here is your reward!
+  - You again! / Enemies attack not so strong! / Thank, you. It's your reward!
+  - You beatiful! / We win! / It's your reward / But, i'dont have many quest for
+    you!

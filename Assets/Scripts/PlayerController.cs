@@ -12,6 +12,7 @@ public class PlayerController : MonoBehaviour
     [SerializeField] Vector2 arenaRespawnPoint;
     [SerializeField] ArenaCounter arenaCounter;
     [SerializeField] ArenaSpawner ArenaSpawner;
+    [SerializeField] SaveSystem saveSystem;
 
     [SerializeField] TMP_Text HpText;
     [SerializeField] TMP_Text GoldText;
@@ -90,14 +91,18 @@ public class PlayerController : MonoBehaviour
 
         if (_manager.Health <= 0)
         {
-            if (!onArena) SceneManager.LoadScene("GameOver");
+            if (!onArena)
+            {
+              saveSystem.EndOfGame();  
+              SceneManager.LoadScene("GameOver");
+            } 
             else
             {
-               transform.position = arenaRespawnPoint;
-               _manager.Health = _manager.MaxHealth;
+                transform.position = arenaRespawnPoint;
+                _manager.Health = _manager.MaxHealth;
                 arenaCounter.DisplayStatistic();
                 ArenaSpawner.DisableSpawner();
-            } 
+            }
         }
     }
 

@@ -37,7 +37,7 @@ public class QuestChain : MonoBehaviour
             {
                 List<string> DialogueText = new List<string>(questData.takeDialogue[stage].Split('/'));
                 dialogueManager.StartDialogue(DialogueText);
-                questChecker.QuestInteraction(questData.title, questData.type, questData.goal, questData.xpReward * (stage + 1), questData.goldReward * (stage + 1));
+                questChecker.QuestInteraction(questData.title, questData.type, questData.goal * (stage + 1), questData.xpReward * (stage + 1), questData.goldReward * (stage + 1));
                 Debug.Log($"Type #{typeID}-{stage} quest taken.");
                 StartCoroutine(Delay());
             }

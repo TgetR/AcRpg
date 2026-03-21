@@ -10,6 +10,7 @@ TagManager:
   - KeyController
   - ItemCard
   - ArenaCounter
+  - InventorySlot
   layers:
   - Default
   - TransparentFX

@@ -1,0 +1,27 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: a6e5554b09fcaed46b7dc9819d4c8175, type: 3}
+  m_Name: ArenaPlayQuest
+  m_EditorClassIdentifier: Assembly-CSharp::QuestData
+  title: Play on arena!
+  type: 2
+  goal: 3
+  xpReward: 80
+  goldReward: 50
+  takeDialogue:
+  - You're newbie? / Anyway, play on arena and i pay you / For now, play 3 rounds
+  - Hello! / You're much better then i think! / Now play 6 rounds
+  - Nice to meet you! / You're a master now! / How abot play 9 rounds?
+  completeDialogue:
+  - Okay, its not bad! / It's your reward
+  - I'm very surprised! / It's your reward, better then before!
+  - You're good! / Final reward! / I don't have many quests for you!

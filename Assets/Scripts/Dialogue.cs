@@ -1,5 +1,8 @@
+using System;
+using System.Collections;
 using System.Collections.Generic;
 using TMPro;
+using Unity.VisualScripting;
 using UnityEngine;
 
 public class Dialogue : MonoBehaviour
@@ -9,6 +12,7 @@ public class Dialogue : MonoBehaviour
     private Animator animator;
     private bool isShowing = false;
     private int showedLines = 0;
+    private bool _cooldown = false;
     private List<string> textList = new List<string>();
     void Start()
     {
@@ -29,30 +33,46 @@ public class Dialogue : MonoBehaviour
     {
         if (isShowing && Input.GetKeyDown(KeyCode.Space))
         {
-           if(textList.Count > showedLines) ShowNextLine();
+            if(textList.Count > showedLines && !_cooldown) ShowNextLine();
             else
             {
                 dialogueCanvas.SetActive(false);
                 text.text = "";
                 isShowing = false;
+                showedLines = 0;
+                textList.Clear();
             }
         }
     }
 
-    void ShowNextLine()
+   void ShowNextLine()
     {
-        if(showedLines < textList.Count)
-        {   
+        StartCoroutine(Cooldown());
+        try
+        {
             text.text = "";
             animator.SetTrigger("ShowAnim");
             showedLines++;
             text.text = textList[showedLines];
+            Debug.Log( showedLines + "/" + textList.Count);   
         }
-        else 
+        catch (Exception ex)
         {
-            dialogueCanvas.SetActive(false);
-            text.text = "";
-            isShowing = false;
+            if (ex is ArgumentOutOfRangeException)
+            {
+                dialogueCanvas.SetActive(false);
+                text.text = "";
+                isShowing = false;
+                showedLines = 0;
+                textList.Clear();
+            }
         }
+            
+    }
+    IEnumerator Cooldown()
+    {
+        _cooldown = true;
+        yield return new WaitForSeconds(5f);
+        _cooldown = false;
     }
 }

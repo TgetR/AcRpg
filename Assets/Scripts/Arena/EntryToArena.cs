@@ -15,6 +15,7 @@ public class EntryToArena : MonoBehaviour
     private OnScreenNotify _notify;
     GameObject canvas;
     private bool inZone = false;
+    GameObject player;
     void Start()
     {
         ConfirmMenu.SetActive(false);
@@ -22,6 +23,7 @@ public class EntryToArena : MonoBehaviour
 
         canvas = transform.GetChild(0).gameObject;
         canvas.SetActive(false);
+        player = GameObject.FindGameObjectWithTag("Player");
     }
     void Update()
     {
@@ -29,8 +31,14 @@ public class EntryToArena : MonoBehaviour
         {
             if(isEntryCostKeys && KeysNeeded <= _keySystemController.KeysBalance || !isEntryCostKeys)
             {
-                ConfirmMenu.SetActive(true);
-                Time.timeScale = 0;  
+                // Entry to arena: teleport player, activate arena, add quest progress 
+                _notify.Notify("You teleported to Arena!", 1);
+                player.transform.position = Destination;
+                player.GetComponent<PlayerController>().onArena = true;
+                ConfirmMenu.SetActive(false);
+                Time.timeScale = 1;
+                ArenaSpawner.ActivateSpawner();
+                questChecker.AddArenaActivation();
             } 
             else
             {
@@ -58,17 +66,6 @@ public class EntryToArena : MonoBehaviour
 
     public void ConfirmEntry(GameObject player)
     {
-        _notify.Notify("You teleported to Arena!", 1);
-        player.transform.position = Destination;
-        player.GetComponent<PlayerController>().onArena = true;
-        ConfirmMenu.SetActive(false);
-        Time.timeScale = 1;
-        ArenaSpawner.ActivateSpawner();
-        questChecker.AddArenaActivation();
-    }
-    public void CancelEntry()
-    {
-        ConfirmMenu.SetActive(false);
-        Time.timeScale = 1;
+        
     }
 }

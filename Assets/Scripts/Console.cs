@@ -1,9 +1,6 @@
 using System.Collections.Generic;
 using TMPro;
-using Unity.VisualScripting;
 using UnityEngine;
-using UnityEngine.UI;
-
 public class Console : MonoBehaviour
 {
     [SerializeField] private GameObject consoleUI;
@@ -101,8 +98,10 @@ public class Console : MonoBehaviour
                 {
                     return "Usage: quest [take/complete]";
                 }
+
             case "GetItems":
                 return GetItemsNamesAndIDs();
+
             //Give commands category
             case "give":
                 if (input.Length > 2)

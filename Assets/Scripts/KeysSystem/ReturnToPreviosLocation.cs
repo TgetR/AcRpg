@@ -1,4 +1,6 @@
+using TMPro;
 using UnityEngine;
+using UnityEngine.EventSystems;
 
 public class ReturnToPreviosLocation : MonoBehaviour
 {
@@ -17,7 +19,7 @@ public class ReturnToPreviosLocation : MonoBehaviour
     }
     void Update()
     {
-        if (Input.GetKey(KeyCode.E) && inZone && isWorking)
+        if (Input.GetKey(KeyCode.E) && inZone && isWorking  && (EventSystem.current.currentSelectedGameObject == null || EventSystem.current.currentSelectedGameObject.GetComponent<TMP_InputField>() == null))
         {
             _notify.Notify("You returned to previos location!", 1);
             player.transform.position = tpTo;   

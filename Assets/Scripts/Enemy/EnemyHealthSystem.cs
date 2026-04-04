@@ -22,9 +22,10 @@ public class EnemyHealthSystem : MonoBehaviour
             _arenaSpawner = _arenaCounter.transform.parent.GetChild(1).GetComponent<ArenaSpawner>();
         } 
 
-        _questChecker = GameObject.FindGameObjectWithTag("GameController").GetComponent<QuestChecker>();
-        _Smanager = GameObject.FindGameObjectWithTag("GameController").GetComponent<StatsManager>();
-        _KeySystem = GameObject.FindGameObjectWithTag("KeyController").GetComponent<KeySystemController>();
+        GameObject gameController = GameObject.FindGameObjectWithTag("GameController");
+        _questChecker = gameController.GetComponent<QuestChecker>();
+        _Smanager = gameController.GetComponent<StatsManager>();
+        _KeySystem = gameController.GetComponent<KeySystemController>();
     }
 
     void Update()

@@ -1,6 +1,8 @@
 using NUnit.Framework;
+using TMPro;
 using Unity.IO.LowLevel.Unsafe;
 using UnityEngine;
+using UnityEngine.EventSystems;
 
 public class EntryToArena : MonoBehaviour
 {
@@ -27,7 +29,7 @@ public class EntryToArena : MonoBehaviour
     }
     void Update()
     {
-        if(Input.GetKey(KeyCode.E) && inZone && isWorking)
+        if(Input.GetKey(KeyCode.E) && inZone && isWorking  && (EventSystem.current.currentSelectedGameObject == null || EventSystem.current.currentSelectedGameObject.GetComponent<TMP_InputField>() == null))
         {
             if(isEntryCostKeys && KeysNeeded <= _keySystemController.KeysBalance || !isEntryCostKeys)
             {

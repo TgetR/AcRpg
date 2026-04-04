@@ -1,27 +1,39 @@
 using System.Collections.Generic;
 using System.Linq;
 using TMPro;
+using Unity.VisualScripting;
 using UnityEngine;
+using UnityEngine.EventSystems;
 using UnityEngine.UI;
 
 public class Inventory : MonoBehaviour
 {
-    private List<GameObject> slots = new List<GameObject>();
-    private int activeSlots = 0;
-    private List<InventoryItem> inventoryItems = new List<InventoryItem>();
+    private List<GameObject> _slots = new List<GameObject>();
+    private int _activeSlots = 0;
+    private List<InventoryItem> _inventoryItems = new List<InventoryItem>();
+    private bool _opened = false;
+
+    private TMP_Text _keysSlotDescription;
+    [SerializeField] private GameObject keysSlot;
+    
+
     public GameObject InventoryUi;
-    private bool opened = false;
+    
     void Start()
     {
         GetSlots();
         List<ShopItemData> shopItems = Resources.LoadAll<ShopItemData>("Shop/Items").ToList();
         GetAndConvertShopItems(shopItems);
+
+        _keysSlotDescription = keysSlot.GetComponentInChildren<TMP_Text>();
+        _keysSlotDescription.text = "Keys \n You have:" + 0;
     }
+
     void Update()
     {
-        if( Input.GetKeyDown(KeyCode.I) )
+        if( Input.GetKeyDown(KeyCode.I)  && (EventSystem.current.currentSelectedGameObject == null || EventSystem.current.currentSelectedGameObject.GetComponent<TMP_InputField>() == null))
         {
-            if (opened)
+            if (_opened)
             {
                 CloseInventory();
             }
@@ -31,9 +43,10 @@ public class Inventory : MonoBehaviour
             }
         }
     }
+
     void GetSlots()
     {
-        slots = GameObject.FindGameObjectsWithTag("InventorySlot").ToList();
+        _slots = GameObject.FindGameObjectsWithTag("InventorySlot").ToList();
     }
 
     void GetAndConvertShopItems(List<ShopItemData> shopItems)
@@ -49,10 +62,10 @@ public class Inventory : MonoBehaviour
                 newInventoryItem.icon = shopItem.icon;
                 newInventoryItem.itemDescription = shopItem.itemDescription;
 
-                inventoryItems.Add(newInventoryItem);
-                slots[activeSlots].transform.GetChild(0).GetComponent<Image>().sprite = shopItem.icon;
-                slots[activeSlots].GetComponentInChildren<TMP_Text>().text = shopItem.itemDescription + "\n" + shopItem.effectDescription;
-                activeSlots++;
+                _inventoryItems.Add(newInventoryItem);
+                _slots[_activeSlots].transform.GetChild(0).GetComponent<Image>().sprite = shopItem.icon;
+                _slots[_activeSlots].GetComponentInChildren<TMP_Text>().text = shopItem.itemDescription + "\n" + shopItem.effectDescription;
+                _activeSlots++;
             }
         }
     }
@@ -61,11 +74,28 @@ public class Inventory : MonoBehaviour
     {
         InventoryUi.SetActive(true);
         GetAndConvertShopItems(Resources.LoadAll<ShopItemData>("Shop/Items").ToList());
-        opened = true;
+        _opened = true;
+
+        Time.timeScale = 0f; // Pause the game when inventory is open
+
+        _keysSlotDescription.text = "Keys \n You have:" + gameObject.GetComponent<KeySystemController>().KeysBalance;
     }
+
     public void CloseInventory()
     {
+        Time.timeScale = 1f; // Resume the game when inventory is closed
+
         InventoryUi.SetActive(false);
-        opened = false;
+        _opened = false;
+    }
+
+    public List<string> GetItemsNames_ForConsoleUse()
+    {
+        List<string> names = new List<string>();
+        foreach (InventoryItem item in _inventoryItems)
+        {
+            names.Add(item.itemDescription);
+        }
+        return names;
     }
 }

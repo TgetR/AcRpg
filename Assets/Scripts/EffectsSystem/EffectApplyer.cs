@@ -24,14 +24,6 @@ public class EffectApplyer : MonoBehaviour
         Debug.Log($"Loaded {availableEffects.Count} effects.");
     }
 
-    void Update()
-    {
-        if (Input.GetKeyDown(KeyCode.Escape))
-        {
-            ApplyEffect(0);
-        }
-    }
-
     public void ApplyEffect(int id)
     {
         Effect effect = availableEffects.FirstOrDefault(obj => obj.effectId == id);

@@ -1,5 +1,7 @@
 using System.Collections;
+using TMPro;
 using UnityEngine;
+using UnityEngine.EventSystems;
 
 public class HealHouse : MonoBehaviour
 {
@@ -18,7 +20,7 @@ public class HealHouse : MonoBehaviour
 
     void Update()
     {
-        if(Input.GetKey(KeyCode.E) && inZone && isWorking)
+        if(Input.GetKey(KeyCode.E) && inZone && isWorking  && (EventSystem.current.currentSelectedGameObject == null || EventSystem.current.currentSelectedGameObject.GetComponent<TMP_InputField>() == null))
         {
                 menu.SetActive(true);
                 Time.timeScale = 0;

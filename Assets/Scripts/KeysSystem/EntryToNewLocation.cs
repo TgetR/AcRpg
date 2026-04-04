@@ -1,4 +1,6 @@
+using TMPro;
 using UnityEngine;
+using UnityEngine.EventSystems;
 
 public class EntryToNewLocation : MonoBehaviour
 {
@@ -12,7 +14,7 @@ public class EntryToNewLocation : MonoBehaviour
     
     void Start()
     {
-        _keySystemController = GameObject.FindGameObjectWithTag("KeyController").GetComponent<KeySystemController>();
+        _keySystemController = GameObject.FindGameObjectWithTag("GameController").GetComponent<KeySystemController>();
         _notify = GameObject.FindGameObjectWithTag("Notifyer").GetComponent<OnScreenNotify>();
         player = GameObject.FindGameObjectWithTag("Player");
         canvas = transform.GetChild(0).gameObject;
@@ -20,7 +22,7 @@ public class EntryToNewLocation : MonoBehaviour
     }
     void Update()
     {
-        if(Input.GetKey(KeyCode.E) && inZone)
+        if(Input.GetKey(KeyCode.E) && inZone  && (EventSystem.current.currentSelectedGameObject == null || EventSystem.current.currentSelectedGameObject.GetComponent<TMP_InputField>() == null))
         {
             if (isWorking && _keySystemController.KeysCanUse && _keySystemController.KeysBalance > 0)
             {

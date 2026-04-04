@@ -1,5 +1,7 @@
 using System.Collections;
+using TMPro;
 using UnityEngine;
+using UnityEngine.EventSystems;
 
 public class ShopEntry : MonoBehaviour
 {
@@ -18,7 +20,7 @@ public class ShopEntry : MonoBehaviour
 
     void Update()
     {
-        if(Input.GetKey(KeyCode.E) && inZone && isWorking)
+        if(Input.GetKey(KeyCode.E) && inZone && isWorking  && (EventSystem.current.currentSelectedGameObject == null || EventSystem.current.currentSelectedGameObject.GetComponent<TMP_InputField>() == null))
         {
                 ShopMainMenuObject.SetActive(true);
                 Time.timeScale = 0;

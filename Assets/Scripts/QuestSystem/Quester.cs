@@ -1,5 +1,7 @@
 using System.Collections.Generic;
+using TMPro;
 using UnityEngine;
+using UnityEngine.EventSystems;
 
 public class Quester : MonoBehaviour
 {
@@ -12,7 +14,7 @@ public class Quester : MonoBehaviour
     }
     void OnTriggerStay2D(Collider2D collision)
     {
-        if(collision.CompareTag("Player") && Input.GetKeyDown(KeyCode.T))
+        if(collision.CompareTag("Player") && Input.GetKeyDown(KeyCode.T)  && (EventSystem.current.currentSelectedGameObject == null || EventSystem.current.currentSelectedGameObject.GetComponent<TMP_InputField>() == null))
         {
             questChain.QuestChainCheck(questData, questData.type);
         }

@@ -1,5 +1,6 @@
 using TMPro;
 using UnityEngine;
+using UnityEngine.EventSystems;
 
 public class OnScreenNotify : MonoBehaviour
 {
@@ -13,7 +14,7 @@ public class OnScreenNotify : MonoBehaviour
     }
     void Update()
     {
-        if (Input.GetKey(KeyCode.BackQuote)) Notify("Hello, world!", 0);
+        if (Input.GetKey(KeyCode.BackQuote)  && (EventSystem.current.currentSelectedGameObject == null || EventSystem.current.currentSelectedGameObject.GetComponent<TMP_InputField>() == null)) Notify("Hello, world!", 0);
     }
 
     public void Notify(string text, int Level)

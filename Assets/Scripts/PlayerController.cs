@@ -2,6 +2,7 @@ using System.Collections;
 using System.Collections.Generic;
 using TMPro;
 using UnityEngine;
+using UnityEngine.EventSystems;
 using UnityEngine.SceneManagement;
 
 public class PlayerController : MonoBehaviour
@@ -59,7 +60,7 @@ public class PlayerController : MonoBehaviour
 
     void FixedUpdate()
     {
-        if (!_isKnockedBack)
+        if (!_isKnockedBack && (EventSystem.current.currentSelectedGameObject == null || EventSystem.current.currentSelectedGameObject.GetComponent<TMP_InputField>() == null))
         {
             float horizontal = Input.GetAxis("Horizontal");
             float vertical = Input.GetAxis("Vertical");
@@ -108,7 +109,7 @@ public class PlayerController : MonoBehaviour
 
     void AttackCheck()
     {
-        if (Input.GetKeyDown(KeyCode.Mouse0) && !_isInAttack && _AttackAllow)
+        if (Input.GetKeyDown(KeyCode.Mouse0) && !_isInAttack && _AttackAllow  && (EventSystem.current.currentSelectedGameObject == null || EventSystem.current.currentSelectedGameObject.GetComponent<TMP_InputField>() == null))
         {
             _enemiesInRange.RemoveWhere(enemy => enemy == null); //Clean up null references
             _animator.SetTrigger("Attack");

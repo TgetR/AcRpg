@@ -12290,8 +12290,8 @@ GameObject:
   - component: {fileID: 554344372}
   - component: {fileID: 554344371}
   m_Layer: 5
-  m_Name: Slot_6
-  m_TagString: InventorySlot
+  m_Name: Slot_Keys
+  m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
@@ -14202,8 +14202,8 @@ RectTransform:
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_AnchorMin: {x: 0.5, y: 0.5}
   m_AnchorMax: {x: 0.5, y: 0.5}
-  m_AnchoredPosition: {x: -0.013489, y: 0}
-  m_SizeDelta: {x: 100.03, y: 100}
+  m_AnchoredPosition: {x: 0.000016212, y: -0.00000059605}
+  m_SizeDelta: {x: 31.1932, y: 80.2315}
   m_Pivot: {x: 0.5, y: 0.5}
 --- !u!114 &620770465
 MonoBehaviour:
@@ -14225,7 +14225,7 @@ MonoBehaviour:
   m_OnCullStateChanged:
     m_PersistentCalls:
       m_Calls: []
-  m_Sprite: {fileID: -3297159733344257183, guid: f7a121ba0f53af345b99b8c2457dc012, type: 3}
+  m_Sprite: {fileID: 21300000, guid: 97d44607a1e498c45aed43413a5a9525, type: 3}
   m_Type: 0
   m_PreserveAspect: 0
   m_FillCenter: 1
@@ -18291,9 +18291,9 @@ MonoBehaviour:
   m_OnCullStateChanged:
     m_PersistentCalls:
       m_Calls: []
-  m_text: 'Beeeee
+  m_text: 'Keys
 
-    This slot empty'
+    You have: 0'
   m_isRightToLeft: 0
   m_fontAsset: {fileID: 11400000, guid: 8f586378b4e144a9851e7b34d9b748ee, type: 2}
   m_sharedMaterial: {fileID: 2180264, guid: 8f586378b4e144a9851e7b34d9b748ee, type: 2}
@@ -20030,7 +20030,7 @@ MonoBehaviour:
   KeysNeeded: 1
   questChecker: {fileID: 1929766948}
   Destination: {x: 8, y: 22}
-  _keySystemController: {fileID: 2096362842}
+  _keySystemController: {fileID: 0}
   ConfirmMenu: {fileID: 454295811}
   ArenaSpawner: {fileID: 1863090430}
 --- !u!212 &876255543
@@ -57068,8 +57068,9 @@ GameObject:
   - component: {fileID: 1929766951}
   - component: {fileID: 1929766952}
   - component: {fileID: 1929766953}
+  - component: {fileID: 1929766954}
   m_Layer: 0
-  m_Name: StatsManager
+  m_Name: GameController
   m_TagString: GameController
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -57190,7 +57191,27 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 7f4293229d6d1a44eb5278158b238588, type: 3}
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::Inventory
+  keysSlot: {fileID: 554344369}
   InventoryUi: {fileID: 41818448}
+--- !u!114 &1929766954
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1929766945}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 05445746e0232af4b92bbae300b522d4, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Assembly-CSharp::KeyDropController
+  KeysCanUse: 1
+  KeyDropEnabled: 1
+  KeysBalance: 0
+  NumberOfLocations: 1
+  KillsMinimumForKeys: 2
+  KillsMaximumForKeys: 6
+  LocationMultiplier: 1.5
 --- !u!1 &1930478312
 GameObject:
   m_ObjectHideFlags: 0
@@ -59974,7 +59995,7 @@ MonoBehaviour:
           m_FloatArgument: 0
           m_StringArgument: 
           m_BoolArgument: 0
-        m_CallState: 2
+        m_CallState: 1
 --- !u!114 &2044961360
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -60840,57 +60861,6 @@ MonoBehaviour:
   - {x: 0.5, y: -0.5, z: 0}
   - {x: 0.5, y: 0.5, z: 0}
   - {x: -0.5, y: 0.5, z: 0}
---- !u!1 &2096362841
-GameObject:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  serializedVersion: 6
-  m_Component:
-  - component: {fileID: 2096362843}
-  - component: {fileID: 2096362842}
-  m_Layer: 0
-  m_Name: KeyController
-  m_TagString: KeyController
-  m_Icon: {fileID: 0}
-  m_NavMeshLayer: 0
-  m_StaticEditorFlags: 0
-  m_IsActive: 1
---- !u!114 &2096362842
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 2096362841}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 05445746e0232af4b92bbae300b522d4, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: Assembly-CSharp::KeyDropController
-  KeysCanUse: 1
-  KeyDropEnabled: 1
-  KeysBalance: 0
-  NumberOfLocations: 1
-  KillsMinimumForKeys: 2
-  KillsMaximumForKeys: 6
-  LocationMultiplier: 1.5
---- !u!4 &2096362843
-Transform:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 2096362841}
-  serializedVersion: 2
-  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
-  m_LocalPosition: {x: 16.04094, y: 6.38196, z: 0}
-  m_LocalScale: {x: 1, y: 1, z: 1}
-  m_ConstrainProportionsScale: 0
-  m_Children: []
-  m_Father: {fileID: 0}
-  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!1 &2097372273
 GameObject:
   m_ObjectHideFlags: 0
@@ -62649,7 +62619,6 @@ SceneRoots:
   - {fileID: 1553684386}
   - {fileID: 1929766947}
   - {fileID: 491437016}
-  - {fileID: 2096362843}
   - {fileID: 619394802}
   - {fileID: 504221087}
   - {fileID: 1034016433}

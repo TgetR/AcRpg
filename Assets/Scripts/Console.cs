@@ -1,4 +1,6 @@
+using System.Collections.Generic;
 using TMPro;
+using Unity.VisualScripting;
 using UnityEngine;
 using UnityEngine.UI;
 
@@ -7,6 +9,7 @@ public class Console : MonoBehaviour
     [SerializeField] private GameObject consoleUI;
     [SerializeField] private QuestChain questChain;
     [SerializeField] private QuestChecker questChecker;
+    [SerializeField] private GameObject gameController;
     private TMP_InputField consoleInput;
     private TMP_Text outText;
     private int maxLines = 21;
@@ -16,6 +19,8 @@ public class Console : MonoBehaviour
         consoleUI.SetActive(false);
         consoleInput = consoleUI.GetComponentInChildren<TMP_InputField>();
         outText = consoleUI.GetComponentInChildren<TMP_Text>();
+
+        gameController = GameObject.FindGameObjectWithTag("GameController");
     }
     void Update()
     {
@@ -58,11 +63,15 @@ public class Console : MonoBehaviour
         string[] input = message.Split(' ');
         switch (input[0].ToLower())
         {
+
+            //Display help
             case "help":
-                return "Available commands: help, quest [command], clear, echo [message]";
+                return "Available commands: help, quest [command], clear, echo [message], give [itemID/key] [amount], GetItems";
+            // Clear console
             case "clear":
                 outText.text = "";
                 return "";
+            // Display any message
             case "echo":
                 if (input.Length > 1)
                 {
@@ -72,29 +81,93 @@ public class Console : MonoBehaviour
                 {
                     return "Usage: echo [message]";
                 }
-        }
-
-        if(input[0].ToLower() == "quest")
-        {
-            if(input.Length > 1)
-            {
-                switch (input[1].ToLower())
+            //Quest commands category
+            case "quest":
+                if(input.Length > 1)
                 {
-                    case "complete":
-                        questChecker.CompleteQuest();
-                        return "Quest completed.";
-                    case "finish":
-                        questChecker.DeleteQuest();
-                        return "Quest finished.";
-                    default:
-                        return $"Unknown quest command: {input[1]}";
+                    switch (input[1].ToLower())
+                    {
+                        case "complete":
+                            questChecker.CompleteQuest();
+                            return "Quest completed.";
+                        case "finish":
+                            questChecker.DeleteQuest();
+                            return "Quest finished.";
+                        default:
+                            return $"Unknown quest command: {input[1]}";
+                    }
                 }
-            }
-            else
-            {
-                return "Usage: quest [take/complete]";
-            }
+                else
+                {
+                    return "Usage: quest [take/complete]";
+                }
+            case "GetItems":
+                return GetItemsNamesAndIDs();
+            //Give commands category
+            case "give":
+                if (input.Length > 2)
+                {
+                    switch (input[1].ToLower())
+                    {
+                        //Give keys
+                        case "key":
+
+                            int amount;
+                            if (int.TryParse(input[2], out amount))
+                            {
+                                GameObject.FindGameObjectWithTag("GameController").GetComponent<KeySystemController>().KeysBalance += amount;
+                                return $"Added {amount} keys.";
+                            }
+
+                            else 
+                                return "Usage: give key [amount]";
+
+                        //Give items
+                        case "item":
+
+                            int id;
+                            if (int.TryParse(input[2], out id))
+                            {
+                                return FindItemByID(id);
+                            }
+
+                            else 
+                                return "Usage: give item [itemID]";
+
+                        default:
+                            return $"Unknown item type: {input[1]}";
+                    }
+                }
+                else
+                {
+                    return "Usage: give [itemID/key] [amount]";
+                }
         }
-        else return "Unknown command";
+        return $"Unknown command: {input[0]}";
+    }
+
+    string GetItemsNamesAndIDs()
+    {
+        Inventory inv = gameController.GetComponent<Inventory>();
+        inv.GetItemsNames_ForConsoleUse();
+        List<string> itemNames = inv.GetItemsNames_ForConsoleUse();
+        string result = "Inventory items:\n";
+        for (int i = 0; i < itemNames.Count; i++)
+        {
+            result += $"{i}: {itemNames[i]}\n";
+        }
+        return result;
+    }
+
+    string FindItemByID(int id)
+    {
+        Inventory inv = gameController.GetComponent<Inventory>();
+        inv.GetItemsNames_ForConsoleUse();
+        List<string> itemNames = inv.GetItemsNames_ForConsoleUse();
+        if( itemNames.Count >= id)
+        {
+            return "Item by requested ID found: " + itemNames[id];
+        }
+        return "Item not found.";
     }
 }

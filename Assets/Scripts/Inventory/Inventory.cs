@@ -62,9 +62,16 @@ public class Inventory : MonoBehaviour
                 newInventoryItem.itemDescription = shopItem.itemDescription;
 
                 _inventoryItems.Add(newInventoryItem);
-                _slots[_activeSlots].transform.GetChild(0).GetComponent<Image>().sprite = shopItem.icon;
-                _slots[_activeSlots].GetComponentInChildren<TMP_Text>().text = shopItem.itemDescription + "\n" + shopItem.effectDescription;
-                _activeSlots++;
+                if(_slots.Count > _activeSlots)
+                {
+                    _slots[_activeSlots].transform.GetChild(0).GetComponent<Image>().sprite = shopItem.icon;
+                    _slots[_activeSlots].GetComponentInChildren<TMP_Text>().text = shopItem.itemDescription + "\n" + shopItem.effectDescription;
+                    _activeSlots++;
+                }
+                else 
+                {
+                    Debug.LogWarning("Not enough inventory slots for all items!");
+                }
             }
         }
     }

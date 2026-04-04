@@ -99,7 +99,7 @@ public class Console : MonoBehaviour
                     return "Usage: quest [take/complete]";
                 }
 
-            case "GetItems":
+            case "getid":
                 return GetItemsNamesAndIDs();
 
             //Give commands category

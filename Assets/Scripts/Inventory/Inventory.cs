@@ -71,9 +71,19 @@ public class Inventory : MonoBehaviour
                 else 
                 {
                     Debug.LogWarning("Not enough inventory slots for all items!");
+                    Debug.Log("DEBUG INFO:");
+                    Debug.Log("Active Slots: " + _activeSlots);
+                    Debug.Log("Total Slots: " + _slots.Count);
+                    Debug.Log("Last Added Item: " + shopItem.itemDescription);
+                    Debug.Log("Inventory Items: " + _inventoryItems.Count);
                 }
             }
         }
+    }
+    
+    public List<InventoryItem> GetInventoryItems()
+    {
+        return _inventoryItems;
     }
 
     public void OpenInventory()

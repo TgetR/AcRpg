@@ -11,6 +11,8 @@ TagManager:
   - ItemCard
   - ArenaCounter
   - InventorySlot
+  - HotBar
+  - Teleport
   layers:
   - Default
   - TransparentFX
